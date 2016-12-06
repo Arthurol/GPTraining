@@ -4,127 +4,27 @@ import java.util.Random;
 
 import lombok.Getter;
 import lombok.Setter;
+import operacoes.Comparable;
 
 /**
  * Classe que abriga algumas operações referente às árvores sintéticas e aos nós.
  */
-public class ArvoreSintaticaExpressaoMatematica implements Comparable<ArvoreSintaticaExpressaoMatematica>
+public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 {
 	private @Getter @Setter No raiz;
-	private @Getter int profundidade;
 	private @Getter @Setter int aptidao;
 	
-	public ArvoreSintaticaExpressaoMatematica(No raiz)
+	public ArvoreExpressao(No raiz)
 	{
 		this.raiz = raiz;
-		this.profundidade = raiz.getProfundidade();
 		this.aptidao = 0;
 	}
 	
-	public ArvoreSintaticaExpressaoMatematica(int profundidade)
+	public ArvoreExpressao()
 	{
-		try
-		{
-			this.profundidade = profundidade;
-			this.aptidao = 0;
-			
-			if (profundidade == 1)
-			{
-				raiz = new No(1);
-				raiz.noFilhoEsquerda = new No(0);
-				raiz.noFilhoDireita = new No(0);
-				
-			} else if (profundidade > 1)
-			{
-				raiz = new No(profundidade);
-			
-			} else
-				throw new Exception ("Uma árvore foi inicializa com profundidade inferior a 1.");
-			
-		} catch (Exception e)
-		{
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	public ArvoreSintaticaExpressaoMatematica()
-	{
-		this.raiz = null;
-		this.profundidade = -1;
+		this.raiz = new No();
 		this.aptidao = 0;
 	}
-
-	/**
-	 * Geração de uma árvore/expressão aleatória através do método Grow. Neste a profundidade da árvore não precisa necessáriamente corresponder ao seu limite máximo, 
-	 * além da possibilidade de haver folhas em níveis superiores à profundidade da árvore.
-	 */
-	public No geraArvoreMetodoGrow(int profundidadeLimite)
-	{
-		
-		Random random = new Random();
-		if (profundidadeLimite < 1)
-			return null;
-		
-		if (profundidadeLimite == 1)
-			return new ArvoreSintaticaExpressaoMatematica(1).getRaiz();
-		
-		No raiz = new No();
-		raiz.setNoFilhoEsquerda(new No());
-		raiz.setNoFilhoDireita(new No());
-		int decisao = random.nextInt(4);
-		
-		switch (decisao)
-		{
-		case 0:
-			raiz.setNoFilhoEsquerda(geraArvoreMetodoGrow(profundidadeLimite - 1));
-			raiz.setNoFilhoDireita(new No(0));
-			raiz.setProfundidade(raiz.getNoFilhoEsquerda().getProfundidade() + 1);
-			break;
-			
-		case 1:
-			raiz.setNoFilhoEsquerda(new No(0));
-			raiz.setNoFilhoDireita(geraArvoreMetodoGrow(profundidadeLimite - 1));
-			raiz.setProfundidade(raiz.getNoFilhoDireita().getProfundidade() + 1);
-			break;
-			
-		case 2:
-			raiz.setNoFilhoEsquerda(geraArvoreMetodoGrow(profundidadeLimite - 1));
-			raiz.setNoFilhoDireita(geraArvoreMetodoGrow(profundidadeLimite - 1));
-			raiz.setProfundidade(Math.max(raiz.getNoFilhoDireita().getProfundidade() + 1 , raiz.getNoFilhoDireita().getProfundidade() + 1));
-			break;
-			
-		case 3:
-			return geraArvoreMetodoGrow(1);
-	
-		}
-
-		return raiz;
-	}
-	
-	/**
-	 * Geração de uma árvore aleatória completa, onde a profundidade é a maior possível, de acordo com o limite de profundidade estabelecido.
-	 * Os terminais só podem ser observados no último nível da árvore. 
-	 */
-	public No geraArvoreMetodoFull(int profundidadeLimite)
-	{
-		
-		Random random = new Random();
-		if (profundidadeLimite < 1)
-			return null;
-		
-		if (profundidadeLimite == 1)
-			return new ArvoreSintaticaExpressaoMatematica(1).getRaiz();
-		
-		else
-		{
-			No raiz = new No(profundidadeLimite);
-			raiz.setNoFilhoEsquerda(geraArvoreMetodoFull(profundidadeLimite - 1));
-			raiz.setNoFilhoDireita(geraArvoreMetodoFull(profundidadeLimite - 1));
-		}
-		
-		return raiz;
-	}
-	
 	
 	/**
 	 * Recursivamente resolve as operações matemáticas da árvore, representada pelo nó raiz, retornando um resultado double convertido em String. 
@@ -134,26 +34,26 @@ public class ArvoreSintaticaExpressaoMatematica implements Comparable<ArvoreSint
 	{
 		if (raizSubArvore.getNoFilhoEsquerda() != null && raizSubArvore.getNoFilhoDireita() != null)
 		{
-			No filhoEsquerda = raizSubArvore.noFilhoEsquerda;
-			No filhoDireita = raizSubArvore.noFilhoDireita;
+			No filhoEsquerda = raizSubArvore.getNoFilhoEsquerda();
+			No filhoDireita = raizSubArvore.getNoFilhoDireita();
 			Operador operador = raizSubArvore.getOperador();
 			
-			if (filhoEsquerda.tipoDeNo == TipoDeNo.folha && filhoDireita.tipoDeNo == TipoDeNo.folha)
+			if (filhoEsquerda.possuiFilhos() == false && filhoDireita.possuiFilhos() == false)
 			{
 				return resolverOperacao(filhoEsquerda.getSimboloTerminal(), filhoDireita.getSimboloTerminal(), operador, valorX);		
 			}
 			
-			if (filhoEsquerda.tipoDeNo == TipoDeNo.interno && filhoDireita.tipoDeNo == TipoDeNo.folha)
+			if (filhoEsquerda.possuiFilhos() && filhoDireita.possuiFilhos() == false)
 			{
 				return resolverOperacao(resolverExpressao(filhoEsquerda, valorX), filhoDireita.getSimboloTerminal(), operador, valorX);
 			}
 			
-			if (filhoEsquerda.tipoDeNo == TipoDeNo.folha && filhoDireita.tipoDeNo == TipoDeNo.interno)
+			if (filhoEsquerda.possuiFilhos() == false && filhoDireita.possuiFilhos())
 			{
 				return resolverOperacao(filhoEsquerda.getSimboloTerminal(), resolverExpressao(filhoDireita, valorX), operador, valorX);
 			}
 			
-			if (filhoEsquerda.tipoDeNo == TipoDeNo.interno && filhoDireita.tipoDeNo == TipoDeNo.interno)
+			if (filhoEsquerda.possuiFilhos() && filhoDireita.possuiFilhos())
 			{
 				return resolverOperacao(resolverExpressao(filhoEsquerda, valorX), resolverExpressao(filhoDireita, valorX), operador, valorX);
 			}
@@ -256,7 +156,25 @@ public class ArvoreSintaticaExpressaoMatematica implements Comparable<ArvoreSint
 		return aptidao;
 	}
 	
-	public int compareTo(ArvoreSintaticaExpressaoMatematica outraArvore)
+	public int getProfundidade()
+	{
+		if (raiz.getNoFilhoEsquerda() == null && raiz.getNoFilhoDireita() == null)
+			return 0;
+		
+		if (raiz.noFilhoEsquerda.possuiFilhos() == false && raiz.noFilhoDireita.possuiFilhos() == false)
+			return 1;
+		
+		else 
+		{
+			ArvoreExpressao subArvoreEsquerda = new ArvoreExpressao(raiz.getNoFilhoEsquerda());
+			ArvoreExpressao subArvoreDireita = new ArvoreExpressao(raiz.getNoFilhoDireita());
+
+			return Math.max(1 + subArvoreEsquerda.getProfundidade(), 1 + subArvoreDireita.getProfundidade());
+		}
+		
+	}
+	
+	public int compareTo(ArvoreExpressao outraArvore)
 	{
 		if (this.aptidao < outraArvore.aptidao)
 			return -1;
@@ -266,4 +184,5 @@ public class ArvoreSintaticaExpressaoMatematica implements Comparable<ArvoreSint
 			
 		return 0;
 	}
+	
 }

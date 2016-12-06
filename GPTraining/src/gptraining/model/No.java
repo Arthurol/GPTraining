@@ -10,67 +10,73 @@ import lombok.Setter;
  */
 public class No 
 {
-	public TipoDeNo tipoDeNo;
 	private @Getter @Setter String simboloTerminal;
 	private @Setter Operador operador;
 	public @Getter @Setter No noFilhoEsquerda;
 	public @Getter @Setter No noFilhoDireita;
-	public @Getter @Setter int profundidade;
 	
 	public No()
 	{
-		this.tipoDeNo =  null;
 		this.simboloTerminal = null;
 		this.operador = null;
-		this.profundidade = 0;
 		this.noFilhoEsquerda = null;
 		this.noFilhoDireita = null;
 	}
 	
-	public No(int profundidade)
-	{
-		this.profundidade = profundidade;
-		Random random = new Random();
-		String terminalEscolhido = null;
-		
-		if (profundidade == 0)
-		{
-			this.tipoDeNo = TipoDeNo.folha;
-			int numDecisaoTerminal = random.nextInt(12);
-			
-			
-			int terminalInt = numDecisaoTerminal % 12;
-
-			if (terminalInt > 9)
-			{
-				terminalEscolhido = "x";
-				
-			} else
-			{
-				boolean decisao = (random.nextInt() % 2 == 0? true : false);
-				
-				if (decisao == false)
-					terminalInt *= -1;
-				
-				terminalEscolhido = String.valueOf(terminalInt);
-			}
-			this.noFilhoEsquerda = null;
-			this.noFilhoDireita = null;
-			this.operador = null;
-		}
-		else if (profundidade > 1)
-		{
-			this.tipoDeNo = TipoDeNo.interno;
-			Operador operadorEscolhido = Operador.soma;
-			int numDecisaoOperador = random.nextInt(4);
-			this.operador = operadorEscolhido.getOperador(numDecisaoOperador);
-		}
-		
-		this.simboloTerminal = terminalEscolhido;
-	}
 	
 	public Operador getOperador()
 	{
 		return (operador.getOperador(operador.getCodigo()));
+	}
+	
+	public boolean possuiFilhos()
+	{
+		if (this.noFilhoEsquerda != null || this.noFilhoDireita != null)
+			return true;
+		
+		return false;
+	}
+	
+	public void preenchimentoAleatorioOperador()
+	{
+		Random random = new Random();
+		this.noFilhoEsquerda = new No();
+		this.noFilhoDireita = new No();
+		
+		Operador operadorEscolhido = Operador.soma;
+		int numDecisaoOperador = random.nextInt(4);
+		this.operador = operadorEscolhido.getOperador(numDecisaoOperador);
+	}
+	
+	public void preenchimentoAleatorioTerminal()
+	{
+		Random random = new Random();
+		String terminalEscolhido = null;
+		int numDecisaoTerminal = random.nextInt(12);
+		int terminalInt = numDecisaoTerminal % 12;
+
+		/* A chance do terminal ser a variável X é o quádruplo da chance dos outros terminais. Os sorteios 10 e 11 resultarão na 
+		* atribuição de "X" ao terminal. Sorteios menores (de 0 a 9) passarão por um novo processo de aleatoriedade para decidir
+		* o sinal do terminal. 
+		*/
+		if (terminalInt > 9)
+		{
+			terminalEscolhido = "x";
+			
+		} else
+		{
+			//sorteio para decidir se o número terminal é negativo ou positivo
+			boolean decisao = (random.nextInt() % 2 == 0? true : false);
+			
+			if (decisao == false)
+				terminalInt *= -1;
+			
+			terminalEscolhido = String.valueOf(terminalInt);
+		}
+		
+		this.simboloTerminal = terminalEscolhido;
+		this.noFilhoEsquerda = null;
+		this.noFilhoDireita = null;
+		this.operador = null;
 	}
 }

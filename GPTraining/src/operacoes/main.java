@@ -1,4 +1,4 @@
-package gptraining.controller;
+package operacoes;
 
 import java.util.List;
 
