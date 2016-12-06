@@ -1,7 +1,7 @@
 package gptraining.model;
 
 import java.util.Random;
-import lombok.Data;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +11,7 @@ import lombok.Setter;
 public class No 
 {
 	private @Getter @Setter String simboloTerminal;
-	private @Setter Operador operador;
+	private @Setter Operacao operador;
 	public @Getter @Setter No noFilhoEsquerda;
 	public @Getter @Setter No noFilhoDireita;
 	
@@ -23,10 +23,33 @@ public class No
 		this.noFilhoDireita = null;
 	}
 	
-	
-	public Operador getOperador()
+	public No(char operador, No noEsquerda, No noDireita)
 	{
-		return (operador.getOperador(operador.getCodigo()));
+		this.simboloTerminal = "";
+		this.operador = Operacao.get(operador);
+		this.noFilhoEsquerda = noEsquerda;
+		this.noFilhoDireita = noDireita;
+	}
+	
+	public No(String terminal)
+	{
+		this.simboloTerminal = terminal;
+		this.operador = null;
+		this.noFilhoEsquerda = null;
+		this.noFilhoDireita = null;
+	}
+	
+	public No(double terminal)
+	{
+		this.simboloTerminal = String.format("%d", terminal);
+		this.operador = null;
+		this.noFilhoEsquerda = null;
+		this.noFilhoDireita = null;
+	}
+
+	public Operacao getOperador()
+	{
+		return operador;
 	}
 	
 	public boolean possuiFilhos()
@@ -42,10 +65,8 @@ public class No
 		Random random = new Random();
 		this.noFilhoEsquerda = new No();
 		this.noFilhoDireita = new No();
-		
-		Operador operadorEscolhido = Operador.soma;
 		int numDecisaoOperador = random.nextInt(4);
-		this.operador = operadorEscolhido.getOperador(numDecisaoOperador);
+		this.operador = Operacao.get(numDecisaoOperador);
 	}
 	
 	public void preenchimentoAleatorioTerminal()

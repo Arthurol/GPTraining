@@ -1,14 +1,12 @@
 package gptraining.inicializacao;
 
-import java.util.Random;
-
 import gptraining.model.ArvoreExpressao;
 import gptraining.model.No;
 
 
 /**
- * Geração de uma árvore aleatória completa, onde a profundidade de todas as folhas é a maior possível, de acordo com o limite de profundidade estabelecido.
- * Os terminais só podem ser observados no último nível da árvore. 
+ * Geraï¿½ï¿½o de uma ï¿½rvore aleatï¿½ria completa, onde a profundidade de todas as folhas ï¿½ a maior possï¿½vel, de acordo com o limite de profundidade estabelecido.
+ * Os terminais sï¿½ podem ser observados no ï¿½ltimo nï¿½vel da ï¿½rvore. 
  */
 public class GeradorArvoreMetodoFull implements IGeradorArvore 
 {
@@ -30,7 +28,7 @@ public class GeradorArvoreMetodoFull implements IGeradorArvore
 	{
 		if (profundidadeLimite < 0)
 		{
-			System.out.println("Falha ao tentar gerar uma árvore com profundidade negativa.");
+			System.out.println("Falha ao tentar gerar uma ï¿½rvore com profundidade negativa.");
 			return null;
 		}
 		

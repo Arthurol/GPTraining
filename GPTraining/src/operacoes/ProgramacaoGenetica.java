@@ -1,11 +1,8 @@
 package operacoes;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import gptraining.model.ArvoreExpressao;
-import gptraining.model.No;
+
+import java.util.List;
 
 /**
  * Classe onde ser� gerada a popula��o inicial, a medi��o e classifica��o por aptid�o, e onde ser�o realizadas as opera��es gen�ticas conforme o avan�o das gera��es.

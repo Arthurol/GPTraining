@@ -1,13 +1,13 @@
 package gptraining.inicializacao;
 
-import java.util.Random;
-
 import gptraining.model.ArvoreExpressao;
 import gptraining.model.No;
 
+import java.util.Random;
+
 /**
- * Geração de uma árvore aleatória através do método Grow. Neste a profundidade da árvore não precisa necessáriamente corresponder ao seu limite máximo, 
- * além da possibilidade de haver folhas em níveis superiores à profundidade da árvore.
+ * Geraï¿½ï¿½o de uma ï¿½rvore aleatï¿½ria atravï¿½s do mï¿½todo Grow. Neste a profundidade da ï¿½rvore nï¿½o precisa necessï¿½riamente corresponder ao seu limite mï¿½ximo, 
+ * alï¿½m da possibilidade de haver folhas em nï¿½veis superiores ï¿½ profundidade da ï¿½rvore.
  */
 public class GeradorArvoreMetodoGrow implements IGeradorArvore 
 {
@@ -49,25 +49,25 @@ public class GeradorArvoreMetodoGrow implements IGeradorArvore
 			
 			switch (decisao)
 			{
-			//filho à esquerda será operador e filho a direita será terminal
+			//filho ï¿½ esquerda serï¿½ operador e filho a direita serï¿½ terminal
 			case 0:
 				raizSubArvore.setNoFilhoEsquerda(geraArvoreMetodoGrow(profundidadeLimite - 1));
 				raizSubArvore.setNoFilhoDireita(geraArvoreMetodoGrow(0));
 				break;
 				
-			//filho à esquerda será terminal e filho a direita será operador
+			//filho ï¿½ esquerda serï¿½ terminal e filho a direita serï¿½ operador
 			case 1:
 				raizSubArvore.setNoFilhoEsquerda(geraArvoreMetodoGrow(0));
 				raizSubArvore.setNoFilhoDireita(geraArvoreMetodoGrow(profundidadeLimite - 1));
 				break;
 				
-			//Ambos os filhos serão operadores
+			//Ambos os filhos serï¿½o operadores
 			case 2:
 				raizSubArvore.setNoFilhoEsquerda(geraArvoreMetodoGrow(profundidadeLimite - 1));
 				raizSubArvore.setNoFilhoDireita(geraArvoreMetodoGrow(profundidadeLimite - 1));
 				break;
 				
-			//Ambos os filhos serão terminais
+			//Ambos os filhos serï¿½o terminais
 			case 3:
 				return geraArvoreMetodoGrow(1);
 		

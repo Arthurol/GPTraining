@@ -1,15 +1,16 @@
 package gptraining.test;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import gptraining.inicializacao.GeradorArvoreMetodoFull;
+import gptraining.inicializacao.GeradorPopulacaoInicial;
 import gptraining.model.ArvoreExpressao;
 import gptraining.model.No;
 import gptraining.model.Populacao;
-import gptraining.inicializacao.GeradorArvoreMetodoFull;
-import gptraining.inicializacao.GeradorPopulacaoInicial;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 

@@ -1,16 +1,13 @@
 package gptraining.inicializacao;
 
-import java.util.Collections;
-import java.util.List;
-
 import gptraining.model.ArvoreExpressao;
 import gptraining.model.Populacao;
 
 public class GeradorPopulacaoInicial {
 
 	/**
-	 * Inicializa a metade da população utilizando o método Grow e a outra metade utilizando o método Full, 
-	 * ambos métodos de construção de árvores aleatórias.
+	 * Inicializa a metade da populaï¿½ï¿½o utilizando o mï¿½todo Grow e a outra metade utilizando o mï¿½todo Full, 
+	 * ambos mï¿½todos de construï¿½ï¿½o de ï¿½rvores aleatï¿½rias.
 	 * 
 	 */
 	public Populacao inicializacaoRampedHalfAndHalf(int tamanhoPopulacao, int profundidadeLimite)
@@ -22,7 +19,7 @@ public class GeradorPopulacaoInicial {
 		int quantidadeIndividuosGrow = tamanhoPopulacao / 2;
 		int quantidadeIndividuosFull = tamanhoPopulacao - quantidadeIndividuosGrow;
 		
-		//Preenchimento da população inicial equilibrando o número de invivíduos gerados aleatoriamente pelos métodos Grow e Full.
+		//Preenchimento da populaï¿½ï¿½o inicial equilibrando o nï¿½mero de invivï¿½duos gerados aleatoriamente pelos mï¿½todos Grow e Full.
 		
 		for (int i = 0; i < quantidadeIndividuosGrow; i++)
 		{

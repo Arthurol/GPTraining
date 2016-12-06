@@ -1,7 +1,5 @@
 package gptraining.model;
 
-import java.util.Random;
-
 import lombok.Getter;
 import lombok.Setter;
 import operacoes.Comparable;
@@ -30,13 +28,22 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	 * Recursivamente resolve as opera��es matem�ticas da �rvore, representada pelo n� raiz, retornando um resultado double convertido em String. 
 	 * Como h� recurs�o, o tipo de retorno escolhido foi String, pois al�m de inteiros entre -9 e 9 pode haver x no s�mbolo de um n�.
 	 */
-	public String resolverExpressao(No raizSubArvore, int valorX)
+	public double resolverExpressao(double valorX)
+	{
+		return resolverExpressao(raiz, valorX);
+	}
+	
+	/**
+	 * Recursivamente resolve as opera��es matem�ticas da �rvore, representada pelo n� raiz, retornando um resultado double convertido em String. 
+	 * Como h� recurs�o, o tipo de retorno escolhido foi String, pois al�m de inteiros entre -9 e 9 pode haver x no s�mbolo de um n�.
+	 */
+	public double resolverExpressao(No raizSubArvore, double valorX)
 	{
 		if (raizSubArvore.getNoFilhoEsquerda() != null && raizSubArvore.getNoFilhoDireita() != null)
 		{
 			No filhoEsquerda = raizSubArvore.getNoFilhoEsquerda();
 			No filhoDireita = raizSubArvore.getNoFilhoDireita();
-			Operador operador = raizSubArvore.getOperador();
+			Operacao operador = raizSubArvore.getOperador();
 			
 			if (filhoEsquerda.possuiFilhos() == false && filhoDireita.possuiFilhos() == false)
 			{
@@ -64,46 +71,39 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	/**
 	 * Retorna, na forma de String, o resultado de uma opera��o entre dois terminais.
 	 */
-	public String resolverOperacao(String terminalEsquerda, String terminalDireita, Operador operador, int valorX)
+	public double resolverOperacao(String terminalEsquerda, String terminalDireita, Operacao operador, double valorX) throws Exception
 	{
 		double numeroEsquerda = Double.valueOf(terminalEsquerda);
 		double numeroDireita = Double.valueOf(terminalDireita);
 		
-		try 
+		if (checaCaracterValido(terminalEsquerda, terminalDireita) == false)
+			throw new Exception ("O n� cont�m um terminal que n�o � um inteiro entre -9 e 9 e n�o � igual a x.");
+			
+		if (terminalEsquerda == "x" || terminalEsquerda == "X")
+			numeroEsquerda = valorX;
+		
+		if (terminalDireita == "x" || terminalDireita == "X")
+			numeroDireita = valorX;
+		
+		switch (operador)
 		{
-			if (checaCaracterValido(terminalEsquerda, terminalDireita) == false)
-				throw new Exception ("O n� cont�m um terminal que n�o � um inteiro entre -9 e 9 e n�o � igual a x.");
+			case Soma:
+				return numeroEsquerda + numeroDireita;
 				
-			if (terminalEsquerda == "x" || terminalEsquerda == "X")
-				numeroEsquerda = (double) valorX;
-			
-			if (terminalDireita == "x" || terminalDireita == "X")
-				numeroDireita = (double) valorX;
-			
-			switch (operador)
-			{
-				case soma:
-					return String.valueOf(numeroEsquerda + numeroDireita);
-					
-				case subtracao:
-					return String.valueOf(numeroEsquerda - numeroDireita);
-					
-				case multiplicacao:
-					return String.valueOf(numeroEsquerda * numeroDireita);
-					
-				case divisao:
-					if (numeroDireita == 0.0)
-						throw new Exception ("Uma divis�o por 0 foi encontrada. Execu��o cancelada.");
-					
-					return String.valueOf (numeroEsquerda / numeroDireita);		
-			}
-			return null;
-			
-		} catch (Exception e)
-		{
-			System.out.println(e);
-			return e.getMessage();
+			case Subtracao:
+				return numeroEsquerda - numeroDireita;
+				
+			case Multiplicacao:
+				return numeroEsquerda * numeroDireita;
+				
+			case Divisao:
+				if (numeroDireita == 0.0)
+					throw new Exception ("Uma divis�o por 0 foi encontrada. Execu��o cancelada.");
+				
+				return numeroEsquerda / numeroDireita;		
 		}
+		
+		throw new Exception ("Operador invalido");
 	}
 	
 	public boolean checaCaracterValido(String terminalEsquerda, String terminalDireita)
@@ -144,13 +144,13 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	/**
 	 * Se a express�o contida na �rvore resulta em Y, dado seu valor de X correspondente, h� um ganho na aptid�o da �rvore/express�o em quest�o.
 	 */
-	public int avaliarAptidaoArvore(No raiz, int[] vetX, int[] vetY)
+	public double avaliarAptidaoArvore(No raiz, int[] vetX, int[] vetY)
 	{
 		int aptidao = 0;
 		for (int i = 0; i < vetX.length; i++)
 		{
-			if (vetY[i] == Integer.parseInt(resolverExpressao(raiz, vetX[i])))
-					aptidao ++;
+			if (vetY[i] == resolverExpressao(raiz, vetX[i]))
+					aptidao ++;		// TODO rever
 		}
 		
 		return aptidao;
