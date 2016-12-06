@@ -8,7 +8,7 @@ import gptraining.model.ArvoreExpressao;
 import gptraining.model.No;
 
 /**
- * Classe onde será gerada a população inicial, a medição e classificação por aptidão, e onde serão realizadas as operações genéticas conforme o avanço das gerações.
+ * Classe onde serï¿½ gerada a populaï¿½ï¿½o inicial, a mediï¿½ï¿½o e classificaï¿½ï¿½o por aptidï¿½o, e onde serï¿½o realizadas as operaï¿½ï¿½es genï¿½ticas conforme o avanï¿½o das geraï¿½ï¿½es.
  */
 public class ProgramacaoGenetica {
 
@@ -24,7 +24,7 @@ public class ProgramacaoGenetica {
 	}
 	
 	/**
-	 * Ordena por aptidão as árvores presentes na lista de entrada do método.
+	 * Ordena por aptidï¿½o as ï¿½rvores presentes na lista de entrada do mï¿½todo.
 	 */
 	public List<ArvoreExpressao> avaliarAptidaoCandidatos(List<ArvoreExpressao> geracao, int[] vetX, int[] vetY)
 	{
@@ -34,7 +34,7 @@ public class ProgramacaoGenetica {
 		{
 			listaOrdenada.get(i).setAptidao(arvore.avaliarAptidaoArvore(listaOrdenada.get(i).getRaiz(), vetX, vetY));
 		}
-		Collections.sort(listaOrdenada);
+		//Collections.sort(listaOrdenada);
 		return listaOrdenada;
 		
 	}

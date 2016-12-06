@@ -24,6 +24,11 @@ public class Populacao
 		numeroGeracao = 0;
 	}
 	
+	public Populacao(List<ArvoreExpressao> listaIndividuos)
+	{
+		individuos = listaIndividuos;
+	}
+	
 	public void adicionaIndividuo(ArvoreExpressao arvore)
 	{
 		individuos.add(arvore);

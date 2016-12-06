@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Operadores matemáticos, usados nos nós internos da árvore para representar expressões matemáticas.
+ * Operadores matemï¿½ticos, usados nos nï¿½s internos da ï¿½rvore para representar expressï¿½es matemï¿½ticas.
  */
 public enum Operador 
 {
@@ -46,6 +46,10 @@ public enum Operador
 		}
 		
 		return null;
+	}
+
+	public int getCodigo() {
+		return codigo;
 	}
 	
 }

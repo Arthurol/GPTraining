@@ -1,12 +1,12 @@
 package gptraining.model;
 
 import java.util.Random;
-
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Estrutura das árvores sintéticas, que carrega um elemento do conjunto de terminais ou do conjunto de funções.
+ * Estrutura das ï¿½rvores sintï¿½ticas, que carrega um elemento do conjunto de terminais ou do conjunto de funï¿½ï¿½es.
  */
 public class No 
 {
@@ -55,8 +55,8 @@ public class No
 		int numDecisaoTerminal = random.nextInt(12);
 		int terminalInt = numDecisaoTerminal % 12;
 
-		/* A chance do terminal ser a variável X é o quádruplo da chance dos outros terminais. Os sorteios 10 e 11 resultarão na 
-		* atribuição de "X" ao terminal. Sorteios menores (de 0 a 9) passarão por um novo processo de aleatoriedade para decidir
+		/* A chance do terminal ser a variï¿½vel X ï¿½ o quï¿½druplo da chance dos outros terminais. Os sorteios 10 e 11 resultarï¿½o na 
+		* atribuiï¿½ï¿½o de "X" ao terminal. Sorteios menores (de 0 a 9) passarï¿½o por um novo processo de aleatoriedade para decidir
 		* o sinal do terminal. 
 		*/
 		if (terminalInt > 9)
@@ -65,7 +65,7 @@ public class No
 			
 		} else
 		{
-			//sorteio para decidir se o número terminal é negativo ou positivo
+			//sorteio para decidir se o nï¿½mero terminal ï¿½ negativo ou positivo
 			boolean decisao = (random.nextInt() % 2 == 0? true : false);
 			
 			if (decisao == false)
@@ -78,5 +78,28 @@ public class No
 		this.noFilhoEsquerda = null;
 		this.noFilhoDireita = null;
 		this.operador = null;
+	}
+
+	public No getNoFilhoEsquerda() {
+		
+		return noFilhoEsquerda;
+	}
+	
+	public No getNoFilhoDireita() {
+		
+		return noFilhoDireita;
+	}
+
+	public String getSimboloTerminal() {
+		
+		return simboloTerminal;
+	}
+
+	public void setNoFilhoEsquerda(No noFilhoEsquerda) {
+		this.noFilhoEsquerda = noFilhoEsquerda;
+	}
+
+	public void setNoFilhoDireita(No noFilhoDireita) {
+		this.noFilhoDireita = noFilhoDireita;
 	}
 }

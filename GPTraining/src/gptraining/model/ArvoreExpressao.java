@@ -7,7 +7,7 @@ import lombok.Setter;
 import operacoes.Comparable;
 
 /**
- * Classe que abriga algumas operações referente às árvores sintéticas e aos nós.
+ * Classe que abriga algumas operaï¿½ï¿½es referente ï¿½s ï¿½rvores sintï¿½ticas e aos nï¿½s.
  */
 public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 {
@@ -27,8 +27,8 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	}
 	
 	/**
-	 * Recursivamente resolve as operações matemáticas da árvore, representada pelo nó raiz, retornando um resultado double convertido em String. 
-	 * Como há recursão, o tipo de retorno escolhido foi String, pois além de inteiros entre -9 e 9 pode haver x no símbolo de um nó.
+	 * Recursivamente resolve as operaï¿½ï¿½es matemï¿½ticas da ï¿½rvore, representada pelo nï¿½ raiz, retornando um resultado double convertido em String. 
+	 * Como hï¿½ recursï¿½o, o tipo de retorno escolhido foi String, pois alï¿½m de inteiros entre -9 e 9 pode haver x no sï¿½mbolo de um nï¿½.
 	 */
 	public String resolverExpressao(No raizSubArvore, int valorX)
 	{
@@ -62,7 +62,7 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	}
 	
 	/**
-	 * Retorna, na forma de String, o resultado de uma operação entre dois terminais.
+	 * Retorna, na forma de String, o resultado de uma operaï¿½ï¿½o entre dois terminais.
 	 */
 	public String resolverOperacao(String terminalEsquerda, String terminalDireita, Operador operador, int valorX)
 	{
@@ -72,7 +72,7 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 		try 
 		{
 			if (checaCaracterValido(terminalEsquerda, terminalDireita) == false)
-				throw new Exception ("O nó contém um terminal que não é um inteiro entre -9 e 9 e não é igual a x.");
+				throw new Exception ("O nï¿½ contï¿½m um terminal que nï¿½o ï¿½ um inteiro entre -9 e 9 e nï¿½o ï¿½ igual a x.");
 				
 			if (terminalEsquerda == "x" || terminalEsquerda == "X")
 				numeroEsquerda = (double) valorX;
@@ -93,7 +93,7 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 					
 				case divisao:
 					if (numeroDireita == 0.0)
-						throw new Exception ("Uma divisão por 0 foi encontrada. Execução cancelada.");
+						throw new Exception ("Uma divisï¿½o por 0 foi encontrada. Execuï¿½ï¿½o cancelada.");
 					
 					return String.valueOf (numeroEsquerda / numeroDireita);		
 			}
@@ -118,7 +118,7 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	}
 	
 	/**
-	 * Garante a presença do terminal "x" na árvore, pois a mesma deve estar em função de "x".
+	 * Garante a presenï¿½a do terminal "x" na ï¿½rvore, pois a mesma deve estar em funï¿½ï¿½o de "x".
 	 */
 	public boolean checaExistenciaDeNoX(No raiz)
 	{
@@ -142,7 +142,7 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	}
 	
 	/**
-	 * Se a expressão contida na árvore resulta em Y, dado seu valor de X correspondente, há um ganho na aptidão da árvore/expressão em questão.
+	 * Se a expressï¿½o contida na ï¿½rvore resulta em Y, dado seu valor de X correspondente, hï¿½ um ganho na aptidï¿½o da ï¿½rvore/expressï¿½o em questï¿½o.
 	 */
 	public int avaliarAptidaoArvore(No raiz, int[] vetX, int[] vetY)
 	{
@@ -184,5 +184,17 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 			
 		return 0;
 	}
+
+	public No getRaiz() {
+		return this.raiz;
+	}
 	
+	public void setRaiz(No raiz) {
+		this.raiz = raiz;
+	}
+
+	public void setAptidao(int aptidao) {
+		this.aptidao = aptidao;
+		
+	}
 }
