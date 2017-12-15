@@ -5,12 +5,12 @@ import lombok.Setter;
 import operacoes.Comparable;
 
 /**
- * Classe que abriga algumas operaï¿½ï¿½es referente ï¿½s ï¿½rvores sintï¿½ticas e aos nï¿½s.
+ * Classe que abriga algumas operações referente às árvores sintáticas e aos nós.
  */
 public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 {
 	private @Getter @Setter No raiz;
-	private @Getter @Setter int aptidao;
+	private @Getter @Setter double aptidao;
 	
 	public ArvoreExpressao(No raiz)
 	{
@@ -27,17 +27,18 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	/**
 	 * Recursivamente resolve as operaï¿½ï¿½es matemï¿½ticas da ï¿½rvore, representada pelo nï¿½ raiz, retornando um resultado double convertido em String. 
 	 * Como hï¿½ recursï¿½o, o tipo de retorno escolhido foi String, pois alï¿½m de inteiros entre -9 e 9 pode haver x no sï¿½mbolo de um nï¿½.
+	 * @throws Exception 
 	 */
-	public double resolverExpressao(double valorX)
+	public double resolverExpressao(double valorX) throws Exception
 	{
 		return resolverExpressao(raiz, valorX);
 	}
 	
 	/**
-	 * Recursivamente resolve as operaï¿½ï¿½es matemï¿½ticas da ï¿½rvore, representada pelo nï¿½ raiz, retornando um resultado double convertido em String. 
-	 * Como hï¿½ recursï¿½o, o tipo de retorno escolhido foi String, pois alï¿½m de inteiros entre -9 e 9 pode haver x no sï¿½mbolo de um nï¿½.
+	 * Recursivamente resolve as operações matemáticas da árvore.
+	 * @throws Exception 
 	 */
-	public double resolverExpressao(No raizSubArvore, double valorX)
+	public double resolverExpressao(No raizSubArvore, double valorX) throws Exception
 	{
 		if (raizSubArvore.getNoFilhoEsquerda() != null && raizSubArvore.getNoFilhoDireita() != null)
 		{
@@ -45,45 +46,39 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 			No filhoDireita = raizSubArvore.getNoFilhoDireita();
 			Operacao operador = raizSubArvore.getOperador();
 			
-			if (filhoEsquerda.possuiFilhos() == false && filhoDireita.possuiFilhos() == false)
+			if (!filhoEsquerda.possuiFilhos()  && !filhoDireita.possuiFilhos() )
 			{
 				return resolverOperacao(filhoEsquerda.getSimboloTerminal(), filhoDireita.getSimboloTerminal(), operador, valorX);		
 			}
 			
-			if (filhoEsquerda.possuiFilhos() && filhoDireita.possuiFilhos() == false)
+			if (filhoEsquerda.possuiFilhos() && !filhoDireita.possuiFilhos())
 			{
-				return resolverOperacao(resolverExpressao(filhoEsquerda, valorX), filhoDireita.getSimboloTerminal(), operador, valorX);
+				return resolverOperacao(String.valueOf(resolverExpressao(filhoEsquerda, valorX)), filhoDireita.getSimboloTerminal(), operador, valorX);
 			}
 			
-			if (filhoEsquerda.possuiFilhos() == false && filhoDireita.possuiFilhos())
+			if (!filhoEsquerda.possuiFilhos() && filhoDireita.possuiFilhos())
 			{
-				return resolverOperacao(filhoEsquerda.getSimboloTerminal(), resolverExpressao(filhoDireita, valorX), operador, valorX);
+				return resolverOperacao(filhoEsquerda.getSimboloTerminal(), String.valueOf(resolverExpressao(filhoDireita, valorX)), operador, valorX);
 			}
 			
 			if (filhoEsquerda.possuiFilhos() && filhoDireita.possuiFilhos())
 			{
-				return resolverOperacao(resolverExpressao(filhoEsquerda, valorX), resolverExpressao(filhoDireita, valorX), operador, valorX);
+				return resolverOperacao(String.valueOf(resolverExpressao(filhoEsquerda, valorX)), String.valueOf(resolverExpressao(filhoDireita, valorX)), operador, valorX);
 			}
 		}
-		return null;
+		throw new Exception("método resolverExpressão sendo chamado de um nó folha.");
 	}
 	
 	/**
-	 * Retorna, na forma de String, o resultado de uma operaï¿½ï¿½o entre dois terminais.
+	 * Retorna, na forma de String, o resultado de uma operação entre dois terminais.
 	 */
 	public double resolverOperacao(String terminalEsquerda, String terminalDireita, Operacao operador, double valorX) throws Exception
 	{
-		double numeroEsquerda = Double.valueOf(terminalEsquerda);
-		double numeroDireita = Double.valueOf(terminalDireita);
-		
-		if (checaCaracterValido(terminalEsquerda, terminalDireita) == false)
-			throw new Exception ("O nï¿½ contï¿½m um terminal que nï¿½o ï¿½ um inteiro entre -9 e 9 e nï¿½o ï¿½ igual a x.");
-			
-		if (terminalEsquerda == "x" || terminalEsquerda == "X")
-			numeroEsquerda = valorX;
-		
-		if (terminalDireita == "x" || terminalDireita == "X")
-			numeroDireita = valorX;
+		double numeroEsquerda = 0.0;
+		double numeroDireita = 0.0;
+
+		numeroEsquerda = terminalEsquerda.equalsIgnoreCase("x") ? valorX : Double.valueOf(terminalEsquerda);
+		numeroDireita = terminalDireita.equalsIgnoreCase("x") ? valorX : Double.valueOf(terminalDireita);
 		
 		switch (operador)
 		{
@@ -98,7 +93,7 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 				
 			case Divisao:
 				if (numeroDireita == 0.0)
-					throw new Exception ("Uma divisï¿½o por 0 foi encontrada. Execuï¿½ï¿½o cancelada.");
+					throw new Exception ("Uma divisãoo por 0 foi encontrada. Execução cancelada.");
 				
 				return numeroEsquerda / numeroDireita;		
 		}
@@ -106,19 +101,8 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 		throw new Exception ("Operador invalido");
 	}
 	
-	public boolean checaCaracterValido(String terminalEsquerda, String terminalDireita)
-	{
-		if ((Double.valueOf(terminalEsquerda) < -9.0 || Double.valueOf(terminalEsquerda) > 9.0 || 
-				Double.valueOf(terminalDireita) < -9.0 || Double.valueOf(terminalEsquerda) > 9.0 ) && 
-					(terminalEsquerda != "x" || terminalEsquerda != "X" || terminalDireita != "x" || terminalDireita != "X" ))
-		return false;
-		
-		else
-			return true;
-	}
-	
 	/**
-	 * Garante a presenï¿½a do terminal "x" na ï¿½rvore, pois a mesma deve estar em funï¿½ï¿½o de "x".
+	 * Garante a presença do terminal "x" na árvore, pois a mesma deve estar em função de "x".
 	 */
 	public boolean checaExistenciaDeNoX(No raiz)
 	{
@@ -139,21 +123,6 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 			
 			return false;
 		}
-	}
-	
-	/**
-	 * Se a expressï¿½o contida na ï¿½rvore resulta em Y, dado seu valor de X correspondente, hï¿½ um ganho na aptidï¿½o da ï¿½rvore/expressï¿½o em questï¿½o.
-	 */
-	public double avaliarAptidaoArvore(No raiz, int[] vetX, int[] vetY)
-	{
-		int aptidao = 0;
-		for (int i = 0; i < vetX.length; i++)
-		{
-			if (vetY[i] == resolverExpressao(raiz, vetX[i]))
-					aptidao ++;		// TODO rever
-		}
-		
-		return aptidao;
 	}
 	
 	public int getProfundidade()
@@ -193,8 +162,78 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 		this.raiz = raiz;
 	}
 
-	public void setAptidao(int aptidao) {
+	public void setAptidao(double aptidao) {
 		this.aptidao = aptidao;
 		
 	}
+	
+	/*
+	 * Retorna a quantidade de nós da árvore
+	 */
+	public int getTamanhoArvore(No raiz)
+	{
+		if (raiz == null)
+			return 0;
+		if (raiz.getNoFilhoEsquerda() == null && raiz.getNoFilhoDireita() == null)
+			return 1;
+		
+		return (1 + getTamanhoArvore(raiz.getNoFilhoEsquerda()) + getTamanhoArvore(raiz.getNoFilhoDireita()));
+	}
+	
+	public int getQuantidadeOperadores(No raiz)
+	{
+		if (raiz.getOperador() == null)
+			return 0;
+		if (raiz.getNoFilhoEsquerda().getOperador() == null && raiz.getNoFilhoDireita().getOperador() == null)
+			return 1;
+		
+		return (1 + getQuantidadeOperadores(raiz.getNoFilhoEsquerda()) + getQuantidadeOperadores(raiz.getNoFilhoDireita()));
+	}
+	
+	public boolean checaValidadeArvore()
+	{
+		int tamanho = this.getTamanhoArvore(this.getRaiz());
+		
+		if (this.checaExistenciaDeNoX(this.getRaiz()) == false)
+			return false;
+		
+		return true;
+		//TODO Casos de teste
+	}
+	
+	/*
+	 * Verifica se nós com operações possuem dois filhos e se nós com terminais são folhas.
+	 */
+	private boolean checaCoerenciaNos(No raiz)
+	{
+		if (raiz.getOperador() != null)
+		{
+			if (raiz.getSimboloTerminal() != null || raiz.getNoFilhoEsquerda() == null || raiz.getNoFilhoDireita() == null)
+				return false;
+			
+			return (checaCoerenciaNos(raiz.getNoFilhoEsquerda()) == true && checaCoerenciaNos(raiz.getNoFilhoDireita()) == true ? 
+					true : false);
+		}
+		else if (!raiz.getSimboloTerminal().isEmpty() && raiz.getSimboloTerminal() != null)
+		{
+			if (raiz.getOperador() != null || raiz.getNoFilhoEsquerda() != null || raiz.getNoFilhoDireita() != null)
+				return false;
+						
+			if (!raiz.getSimboloTerminal().equalsIgnoreCase("x"))
+			{
+				try
+				{
+					double d = Double.parseDouble(raiz.getSimboloTerminal());
+					
+				} catch (NumberFormatException nfe)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+		//TODO Casos de Teste
+	}
+	
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Estrutura das ï¿½rvores sintï¿½ticas, que carrega um elemento do conjunto de terminais ou do conjunto de funï¿½ï¿½es.
+ * Estrutura das árvores sintáticas, que contém um terminal ou uma operação.
  */
 public class No 
 {
@@ -41,7 +41,7 @@ public class No
 	
 	public No(double terminal)
 	{
-		this.simboloTerminal = String.format("%d", terminal);
+		this.simboloTerminal = String.valueOf(terminal);
 		this.operador = null;
 		this.noFilhoEsquerda = null;
 		this.noFilhoDireita = null;
@@ -69,6 +69,11 @@ public class No
 		this.operador = Operacao.get(numDecisaoOperador);
 	}
 	
+	
+	/*
+	 * TODO
+	 * Carece de atualização, pois ainda está trabalhando com inteiros. Terminal numérico agora é double.
+	 */
 	public void preenchimentoAleatorioTerminal()
 	{
 		Random random = new Random();
@@ -76,8 +81,8 @@ public class No
 		int numDecisaoTerminal = random.nextInt(12);
 		int terminalInt = numDecisaoTerminal % 12;
 
-		/* A chance do terminal ser a variï¿½vel X ï¿½ o quï¿½druplo da chance dos outros terminais. Os sorteios 10 e 11 resultarï¿½o na 
-		* atribuiï¿½ï¿½o de "X" ao terminal. Sorteios menores (de 0 a 9) passarï¿½o por um novo processo de aleatoriedade para decidir
+		/* A chance do terminal ser a variável X é o quádruplo da chance dos outros terminais. Os sorteios 10 e 11 resultarão na 
+		* atribuição de "X" ao terminal. Sorteios menores (de 0 a 9) passarão por um novo processo de aleatoriedade para decidir
 		* o sinal do terminal. 
 		*/
 		if (terminalInt > 9)
@@ -86,7 +91,7 @@ public class No
 			
 		} else
 		{
-			//sorteio para decidir se o nï¿½mero terminal ï¿½ negativo ou positivo
+			//sorteio para decidir se o número terminal é negativo ou positivo
 			boolean decisao = (random.nextInt() % 2 == 0? true : false);
 			
 			if (decisao == false)

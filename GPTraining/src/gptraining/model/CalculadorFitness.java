@@ -9,7 +9,13 @@ public class CalculadorFitness
 		for (Dataset.Entrada entrada : dataset.getEntradas())
 		{
 			double yConhecido = entrada.getY();
-			double yCalculado = arvore.resolverExpressao(entrada.getX());
+			double yCalculado;
+			try 
+			{
+				yCalculado = arvore.resolverExpressao(entrada.getX());
+			} catch (Exception e) {
+				return -1;
+			}
 			distancia += Math.pow(yConhecido - yCalculado, 2);
 		}
 		

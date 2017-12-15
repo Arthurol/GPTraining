@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Data;
 
 /**
- * Classe que representa um dataset para o problema de geraÃ§Ã£o de expressÃµes
+ * Classe que representa um dataset para o problema de geração de expressões
  * 
  * @author marciobarros
  */

@@ -1,11 +1,14 @@
 package operacoes;
 
 import gptraining.model.ArvoreExpressao;
+import gptraining.model.CalculadorFitness;
+import gptraining.model.Dataset;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Classe onde serï¿½ gerada a populaï¿½ï¿½o inicial, a mediï¿½ï¿½o e classificaï¿½ï¿½o por aptidï¿½o, e onde serï¿½o realizadas as operaï¿½ï¿½es genï¿½ticas conforme o avanï¿½o das geraï¿½ï¿½es.
+ * Classe onde será gerada a população inicial, a medição e classificação por aptidão, e onde serão realizadas as operações genéticas conforme o avanço das gerações.
  */
 public class ProgramacaoGenetica {
 
@@ -21,31 +24,20 @@ public class ProgramacaoGenetica {
 	}
 	
 	/**
-	 * Ordena por aptidï¿½o as ï¿½rvores presentes na lista de entrada do mï¿½todo.
+	 * Ordena por aptidão as árvores presentes na lista de entrada do método.
 	 */
-	public List<ArvoreExpressao> avaliarAptidaoCandidatos(List<ArvoreExpressao> geracao, int[] vetX, int[] vetY)
+	public List<ArvoreExpressao> avaliarAptidaoCandidatos(List<ArvoreExpressao> geracao, Dataset dataset)
 	{
 		List<ArvoreExpressao> listaOrdenada = geracao;
 		ArvoreExpressao arvore = new ArvoreExpressao();
+		CalculadorFitness calculador = new CalculadorFitness();
 		for (int i = 0; i < geracao.size(); i++)
 		{
-			listaOrdenada.get(i).setAptidao(arvore.avaliarAptidaoArvore(listaOrdenada.get(i).getRaiz(), vetX, vetY));
+			listaOrdenada.get(i).setAptidao(calculador.calcula(listaOrdenada.get(i), dataset));
 		}
-		//Collections.sort(listaOrdenada);
+		Collections.sort(listaOrdenada);
 		return listaOrdenada;
 		
-	}
-	
-	public boolean crossover()
-	{
-		
-		return true;
-	}
-	
-	public boolean mutacao()
-	{
-		
-		return true;
 	}
 	
 }
