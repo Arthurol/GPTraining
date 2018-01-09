@@ -38,7 +38,4 @@ public class Populacao
 		Collections.shuffle(individuos);
 	}
 	
-	//public void ordenarPorAptidao(){}
-	
-	
 }

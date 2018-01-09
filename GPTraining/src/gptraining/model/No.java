@@ -10,8 +10,8 @@ import lombok.Setter;
  */
 public class No 
 {
-	private @Getter @Setter String simboloTerminal;
-	private @Setter Operacao operador;
+	public @Getter @Setter String simboloTerminal;
+	public @Setter Operacao operador;
 	public @Getter @Setter No noFilhoEsquerda;
 	public @Getter @Setter No noFilhoDireita;
 	
@@ -63,8 +63,6 @@ public class No
 	public void preenchimentoAleatorioOperador()
 	{
 		Random random = new Random();
-		this.noFilhoEsquerda = new No();
-		this.noFilhoDireita = new No();
 		int numDecisaoOperador = random.nextInt(4);
 		this.operador = Operacao.get(numDecisaoOperador);
 	}
@@ -78,9 +76,11 @@ public class No
 	{
 		Random random = new Random();
 		String terminalEscolhido = null;
-		int numDecisaoTerminal = random.nextInt(12);
-		int terminalInt = numDecisaoTerminal % 12;
-
+		
+		
+		int numDecisaoTerminal = random.nextInt(12) ; 
+		int terminalInt = (numDecisaoTerminal % 12) + 1;  //Soma com 1 para evitar terminal 0
+		
 		/* A chance do terminal ser a variável X é o quádruplo da chance dos outros terminais. Os sorteios 10 e 11 resultarão na 
 		* atribuição de "X" ao terminal. Sorteios menores (de 0 a 9) passarão por um novo processo de aleatoriedade para decidir
 		* o sinal do terminal. 
@@ -101,9 +101,6 @@ public class No
 		}
 		
 		this.simboloTerminal = terminalEscolhido;
-		this.noFilhoEsquerda = null;
-		this.noFilhoDireita = null;
-		this.operador = null;
 	}
 
 	public No getNoFilhoEsquerda() {

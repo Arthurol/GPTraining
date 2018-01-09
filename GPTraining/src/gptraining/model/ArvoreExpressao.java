@@ -5,17 +5,27 @@ import lombok.Setter;
 import operacoes.Comparable;
 
 /**
- * Classe que abriga algumas opera��es referente �s �rvores sint�ticas e aos n�s.
+ * Classe que abriga algumas operações referente às árvores sintáticas e aos nós.
  */
 public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 {
 	private @Getter @Setter No raiz;
 	private @Getter @Setter double aptidao;
 	
-	public ArvoreExpressao(No raiz)
+	public ArvoreExpressao(No noRaiz)
 	{
-		this.raiz = raiz;
+		this.raiz = new No();
 		this.aptidao = 0;
+		
+		if (noRaiz != null)
+		{
+			this.raiz.noFilhoDireita = (noRaiz.noFilhoDireita) == null ? null : noRaiz.getNoFilhoDireita();
+			this.raiz.noFilhoEsquerda = (noRaiz.noFilhoEsquerda) == null ? null : noRaiz.getNoFilhoEsquerda();
+			this.raiz.operador = (noRaiz.operador == null) ? null : noRaiz.getOperador();
+			this.raiz.simboloTerminal = (noRaiz.simboloTerminal == null) ? null : noRaiz.getSimboloTerminal();
+		}
+		else
+			System.out.println("Construtor de ArvoreExpressao chamado com no raiz null");
 	}
 	
 	public ArvoreExpressao()
@@ -25,8 +35,8 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	}
 	
 	/**
-	 * Recursivamente resolve as opera��es matem�ticas da �rvore, representada pelo n� raiz, retornando um resultado double convertido em String. 
-	 * Como h� recurs�o, o tipo de retorno escolhido foi String, pois al�m de inteiros entre -9 e 9 pode haver x no s�mbolo de um n�.
+	 * Recursivamente resolve as operações matemáticas da árvore, representada pelo nó raiz, retornando um resultado double convertido em String. 
+	 * Como há recursão, o tipo de retorno escolhido foi String, pois além de inteiros entre -9 e 9 pode haver x no símbolo de um nó.
 	 * @throws Exception 
 	 */
 	public double resolverExpressao(double valorX) throws Exception
@@ -35,7 +45,7 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	}
 	
 	/**
-	 * Recursivamente resolve as opera��es matem�ticas da �rvore.
+	 * Recursivamente resolve as operações matemáticas da árvore.
 	 * @throws Exception 
 	 */
 	public double resolverExpressao(No raizSubArvore, double valorX) throws Exception
@@ -66,11 +76,11 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 				return resolverOperacao(String.valueOf(resolverExpressao(filhoEsquerda, valorX)), String.valueOf(resolverExpressao(filhoDireita, valorX)), operador, valorX);
 			}
 		}
-		throw new Exception("m�todo resolverExpress�o sendo chamado de um n� folha.");
+		throw new Exception("método resolverExpressão sendo chamado de um nó folha.");
 	}
 	
 	/**
-	 * Retorna, na forma de String, o resultado de uma opera��o entre dois terminais.
+	 * Retorna, na forma de String, o resultado de uma operação entre dois terminais.
 	 */
 	public double resolverOperacao(String terminalEsquerda, String terminalDireita, Operacao operador, double valorX) throws Exception
 	{
@@ -93,7 +103,7 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 				
 			case Divisao:
 				if (numeroDireita == 0.0)
-					throw new Exception ("Uma divis�oo por 0 foi encontrada. Execu��o cancelada.");
+					throw new Exception ("Uma divisãoo por 0 foi encontrada. Execução cancelada.");
 				
 				return numeroEsquerda / numeroDireita;		
 		}
@@ -102,44 +112,43 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	}
 	
 	/**
-	 * Garante a presen�a do terminal "x" na �rvore, pois a mesma deve estar em fun��o de "x".
+	 * Garante a presença do terminal "x" na árvore, pois a mesma deve estar em função de "x".
 	 */
-	public boolean checaExistenciaDeNoX(No raiz)
+	public boolean checaExistenciaDeNoX(No noRaiz)
 	{
-		if (raiz.getSimboloTerminal() != null && (raiz.getSimboloTerminal().equals("x") || raiz.getSimboloTerminal().equals("X")))
+		if (noRaiz == null)
+			return false;
+		
+		if (noRaiz.getSimboloTerminal() != null && (noRaiz.getSimboloTerminal().equalsIgnoreCase("x")))
 			return true;
 		else 
 		{
-			if (raiz.getNoFilhoEsquerda() != null)
+			if (noRaiz.getNoFilhoEsquerda() != null)
 			{
-				if (checaExistenciaDeNoX(raiz.getNoFilhoEsquerda()))
+				if (checaExistenciaDeNoX(noRaiz.getNoFilhoEsquerda()))
 					return true;
 			}
-			if (raiz.getNoFilhoDireita() != null)
+			if (noRaiz.getNoFilhoDireita() != null)
 			{
-				if (checaExistenciaDeNoX(raiz.getNoFilhoEsquerda()))
+				if (checaExistenciaDeNoX(noRaiz.getNoFilhoDireita()))
 					return true;
-			}
-			
+			}	
 			return false;
 		}
 	}
 	
-	public int getProfundidade()
+	public int getProfundidade(No noRaiz)
 	{
-		if (raiz.getNoFilhoEsquerda() == null && raiz.getNoFilhoDireita() == null)
+		if (noRaiz.getNoFilhoEsquerda() == null && noRaiz.getNoFilhoDireita() == null)
 			return 0;
 		
-		if (raiz.noFilhoEsquerda.possuiFilhos() == false && raiz.noFilhoDireita.possuiFilhos() == false)
+		if (noRaiz.noFilhoEsquerda.possuiFilhos() == false && noRaiz.noFilhoDireita.possuiFilhos() == false)
 			return 1;
 		
 		else 
-		{
-			ArvoreExpressao subArvoreEsquerda = new ArvoreExpressao(raiz.getNoFilhoEsquerda());
-			ArvoreExpressao subArvoreDireita = new ArvoreExpressao(raiz.getNoFilhoDireita());
-
-			return Math.max(1 + subArvoreEsquerda.getProfundidade(), 1 + subArvoreDireita.getProfundidade());
-		}
+			return Math.max(1 + getProfundidade(noRaiz.getNoFilhoEsquerda()), 1 + getProfundidade(noRaiz.getNoFilhoDireita()));
+		
+		//TODO Testes
 		
 	}
 	
@@ -163,12 +172,11 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	}
 
 	public void setAptidao(double aptidao) {
-		this.aptidao = aptidao;
-		
+		this.aptidao = aptidao;	
 	}
 	
 	/*
-	 * Retorna a quantidade de n�s da �rvore
+	 * Retorna a quantidade de nós da árvore
 	 */
 	public int getTamanhoArvore(No raiz)
 	{
@@ -180,50 +188,51 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 		return (1 + getTamanhoArvore(raiz.getNoFilhoEsquerda()) + getTamanhoArvore(raiz.getNoFilhoDireita()));
 	}
 	
-	public int getQuantidadeOperadores(No raiz)
+	public int getQuantidadeOperadores(No noRaiz)
 	{
-		if (raiz.getOperador() == null)
+		if (noRaiz == null || noRaiz.getOperador() == null)
 			return 0;
-		if (raiz.getNoFilhoEsquerda().getOperador() == null && raiz.getNoFilhoDireita().getOperador() == null)
+		if (noRaiz.getOperador() != null && noRaiz.getNoFilhoEsquerda().getOperador() == null && noRaiz.getNoFilhoDireita().getOperador() == null)
 			return 1;
 		
-		return (1 + getQuantidadeOperadores(raiz.getNoFilhoEsquerda()) + getQuantidadeOperadores(raiz.getNoFilhoDireita()));
+		return (1 + getQuantidadeOperadores(noRaiz.getNoFilhoEsquerda()) + getQuantidadeOperadores(noRaiz.getNoFilhoDireita()));
 	}
 	
-	public boolean checaValidadeArvore()
+	/**
+	 * Verifica se nós com operações possuem dois filhos, se nós com terminais são folhas e se existem divisões por zero.
+	 */
+	public boolean checaValidadeArvore(No noRaiz)
 	{
-		int tamanho = this.getTamanhoArvore(this.getRaiz());
-		
-		if (this.checaExistenciaDeNoX(this.getRaiz()) == false)
+		if (noRaiz == null)
 			return false;
 		
-		return true;
-		//TODO Casos de teste
-	}
-	
-	/*
-	 * Verifica se n�s com opera��es possuem dois filhos e se n�s com terminais s�o folhas.
-	 */
-	private boolean checaCoerenciaNos(No raiz)
-	{
-		if (raiz.getOperador() != null)
+		if (noRaiz.getOperador() != null)
 		{
-			if (raiz.getSimboloTerminal() != null || raiz.getNoFilhoEsquerda() == null || raiz.getNoFilhoDireita() == null)
+			if (noRaiz.getSimboloTerminal() != null || noRaiz.getNoFilhoEsquerda() == null || noRaiz.getNoFilhoDireita() == null)
 				return false;
 			
-			return (checaCoerenciaNos(raiz.getNoFilhoEsquerda()) == true && checaCoerenciaNos(raiz.getNoFilhoDireita()) == true ? 
+			//Se uma divisão por zero é encontrada, retorna falso
+			if (noRaiz.getOperador().toString().equalsIgnoreCase("Divisao") && noRaiz.getNoFilhoDireita().getSimboloTerminal() != null)
+			{
+				if (noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("0") || noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("0.0"))
+				{
+					return false;
+				}
+			}
+			
+			return (checaValidadeArvore(noRaiz.getNoFilhoEsquerda()) == true && checaValidadeArvore(noRaiz.getNoFilhoDireita()) == true ? 
 					true : false);
-		}
-		else if (!raiz.getSimboloTerminal().isEmpty() && raiz.getSimboloTerminal() != null)
+		}	
+		else if (noRaiz.getSimboloTerminal() != null)
 		{
-			if (raiz.getOperador() != null || raiz.getNoFilhoEsquerda() != null || raiz.getNoFilhoDireita() != null)
+			if (noRaiz.getOperador() != null || noRaiz.getNoFilhoEsquerda() != null || noRaiz.getNoFilhoDireita() != null)
 				return false;
 						
-			if (!raiz.getSimboloTerminal().equalsIgnoreCase("x"))
+			if (!noRaiz.getSimboloTerminal().equalsIgnoreCase("x"))
 			{
 				try
 				{
-					double d = Double.parseDouble(raiz.getSimboloTerminal());
+					Double.parseDouble(noRaiz.getSimboloTerminal());
 					
 				} catch (NumberFormatException nfe)
 				{
@@ -236,4 +245,148 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 		//TODO Casos de Teste
 	}
 	
+	/**
+	 * Checa se as árvores representadas pelos nós raiz de entrada são idênticas, sem fazer qualquer resolução de expressão.
+	 */
+	public boolean compararEstruturaNos(No raizA, No raizB)
+	{
+		if (raizA.getSimboloTerminal() != null && raizB.getSimboloTerminal() != null)
+		{
+			if(!raizA.getSimboloTerminal().equals(raizB.getSimboloTerminal()))
+				return false;
+			
+			if ((raizA.getOperador() != null && raizB.getOperador() != null)  && raizA.getOperador() != raizB.getOperador())
+				return false;
+		}
+		
+		if ((raizA.possuiFilhos() && !raizB.possuiFilhos()) || (!raizA.possuiFilhos() && raizB.possuiFilhos()))
+			return false;
+		
+		if (raizA.possuiFilhos())
+		{
+			if (compararEstruturaNos(raizA.getNoFilhoEsquerda(), raizB.getNoFilhoEsquerda()) == false || 
+					compararEstruturaNos(raizA.getNoFilhoDireita(), raizB.getNoFilhoDireita()) == false)
+				return false;
+		}
+		return true;		
+	}
+	
+	public String stringExpressao(No noRaiz)
+	{
+		if (noRaiz == null)
+			return "Árvore null";
+		
+		if (!noRaiz.possuiFilhos())
+			return "(" + noRaiz.getSimboloTerminal() + ")";
+		
+		if (!noRaiz.getNoFilhoEsquerda().possuiFilhos() && !noRaiz.getNoFilhoDireita().possuiFilhos())
+		{
+			return "(" + noRaiz.getNoFilhoEsquerda().getSimboloTerminal() + " " + String.valueOf(noRaiz.getOperador().operador) + " " + noRaiz.getNoFilhoDireita().getSimboloTerminal() + ")";
+		}
+		
+		if (!noRaiz.getNoFilhoEsquerda().possuiFilhos() && noRaiz.getNoFilhoDireita().possuiFilhos())
+		{
+			return "(" + noRaiz.getNoFilhoEsquerda().getSimboloTerminal() + " " + String.valueOf(noRaiz.getOperador().operador) + " " + stringExpressao(noRaiz.getNoFilhoDireita()) + ")";
+		}
+		
+		if (noRaiz.getNoFilhoEsquerda().possuiFilhos() && !noRaiz.getNoFilhoDireita().possuiFilhos())
+		{
+			return "(" + stringExpressao(noRaiz.getNoFilhoEsquerda()) + " " + String.valueOf(noRaiz.getOperador().operador) + " " + noRaiz.getNoFilhoDireita().getSimboloTerminal() + ")";
+		}
+		
+		if (noRaiz.getNoFilhoEsquerda().possuiFilhos() && noRaiz.getNoFilhoDireita().possuiFilhos())
+		{
+			return "(" + stringExpressao(noRaiz.getNoFilhoEsquerda()) + " " + String.valueOf(noRaiz.getOperador().operador) + " " + stringExpressao(noRaiz.getNoFilhoDireita()) + ")";
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Resolve todas as operações possíveis da árvore, diminuindo a quantidade de nós
+	 */
+	public ArvoreExpressao simplificarArvore(ArvoreExpressao arvore)
+	{
+		ArvoreExpressao arv = new ArvoreExpressao(arvore.getRaiz());
+		if (arv.getRaiz().possuiFilhos())
+		{
+			while (true)
+			{
+				ArvoreExpressao arvoreSimplificada = new ArvoreExpressao();
+				arvoreSimplificada.setRaiz(quebraOperacaoSimplificavel(arv.getRaiz()));
+				if (!compararEstruturaNos(arv.getRaiz(), arvoreSimplificada.getRaiz()))
+				{
+					arv.setRaiz(arvoreSimplificada.getRaiz());
+				}
+				else
+					break;
+			}
+		}
+		
+		return arv;
+	}
+	
+	/**
+	 * Resolve operações entre dois terminais double e entre terminais x (em caso de subtração ou divisão)
+	 */
+	public No quebraOperacaoSimplificavel (No noRaiz)
+	{
+		
+		if (!noRaiz.possuiFilhos())
+			return noRaiz;
+		
+		//Se um dos filhos for 0 e a operação for de multiplicação ou divisão, um nó 0 é retornado
+		if (noRaiz.getOperador().toString().equalsIgnoreCase("Multiplicacao") || noRaiz.getOperador().toString().equalsIgnoreCase("Divisao"))
+		{
+			if (!noRaiz.getNoFilhoEsquerda().possuiFilhos() && !noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equalsIgnoreCase("x"))
+			{
+				if (Double.valueOf(noRaiz.getNoFilhoEsquerda().getSimboloTerminal()) == 0)
+					return new No(0);
+			}
+			
+			if (!noRaiz.getNoFilhoDireita().possuiFilhos() && !noRaiz.getNoFilhoDireita().getSimboloTerminal().equalsIgnoreCase("x"))
+			{
+				if (Double.valueOf(noRaiz.getNoFilhoDireita().getSimboloTerminal()) == 0)
+					return new No(0);
+			}
+		}
+		
+		if (!noRaiz.getNoFilhoEsquerda().possuiFilhos() && !noRaiz.getNoFilhoDireita().possuiFilhos())
+		{
+			//Se as duas folhas NÃO possuirem valor x
+			if (!noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equalsIgnoreCase("x") && !noRaiz.getNoFilhoDireita().getSimboloTerminal().equalsIgnoreCase("x"))
+			{
+				try {
+					return new No(resolverOperacao(noRaiz.getNoFilhoEsquerda().getSimboloTerminal(), noRaiz.getNoFilhoDireita().getSimboloTerminal(), noRaiz.getOperador(), 0));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			//Se as duas folhas possuirem valor x
+			if (noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equalsIgnoreCase("x") && noRaiz.getNoFilhoDireita().getSimboloTerminal().equalsIgnoreCase("x"))
+			{
+				//subárvores (x - x) e (x / x) se tornam folhas com valor 0 e 1, respectivamente
+				if (noRaiz.getOperador().toString().equalsIgnoreCase("Subtracao"))
+					return new No(0);
+				
+				if (noRaiz.getOperador().toString().equalsIgnoreCase("Divisao"))
+					return new No(1);
+			}
+		}
+		else 
+		{
+			No noAux = noRaiz;
+			
+			if (noAux.getNoFilhoEsquerda().getOperador() != null)
+				noAux.setNoFilhoEsquerda(quebraOperacaoSimplificavel(noAux.getNoFilhoEsquerda()));
+			
+			if (noAux.getNoFilhoDireita().getOperador() != null)
+				noAux.setNoFilhoDireita(quebraOperacaoSimplificavel(noAux.getNoFilhoDireita()));	
+			
+			return noAux;
+		}
+		return noRaiz;
+	}
+
 }

@@ -37,6 +37,9 @@ public class TestGeradorPopulacaoInicial {
 			populacaoTeste.add(arvoreFull);
 		}
 		No raizTeste = new No();
+		raizTeste.noFilhoEsquerda = new No();
+		raizTeste.noFilhoDireita = new No();
+		
 		raizTeste.preenchimentoAleatorioOperador();
 		raizTeste.noFilhoEsquerda.preenchimentoAleatorioTerminal();
 		raizTeste.noFilhoDireita.preenchimentoAleatorioTerminal();
@@ -51,7 +54,7 @@ public class TestGeradorPopulacaoInicial {
 		
 	}
 	
-	@Test
+	
 	public void test2() 
 	{
 		GeradorPopulacaoInicial geradorPop = new GeradorPopulacaoInicial();

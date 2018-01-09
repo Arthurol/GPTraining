@@ -30,8 +30,8 @@ public class TestOperacoesGeneticas {
 		No raizB = new No('+', new No(5.0), new No('*', new No('*', new No("x"), new No("x")), new No(2.0))); //árvore 2x² + 5
 		No raizC = new No('*', new No('*', new No("x"), new No("x")), new No(2.0)); //árvore 2x²
 		
-		assertTrue(operacaoGenetica.compararEstruturaNos(raizA, raizB));
-		assertFalse(operacaoGenetica.compararEstruturaNos(raizB, raizC));
+		assertTrue(arvoreA.compararEstruturaNos(raizA, raizB));
+		assertFalse(arvoreA.compararEstruturaNos(raizB, raizC));
 	}
 	
 	@Test
@@ -45,6 +45,19 @@ public class TestOperacoesGeneticas {
 		assertEquals(2 ,arvore.getQuantidadeOperadores(raizB));
 	}
 	
+	@Test
+	public void testMutacao() {		
+		OperacaoGenetica operacao = new OperacaoGenetica();
+		
+		No raizA = new No('+', new No('*', new No("x"), new No("x")), new No(1.0)); //árvore x² + 1
+		assertTrue(operacao.mutacaoPontoAleatorio(raizA, 0));
+		
+		operacao = new OperacaoGenetica();
+		
+		No raizB = new No('+', new No("x"), new No()); //árvore com filho direito sem preenchimento de terminal ou operação
+		assertFalse(operacao.mutacaoPontoAleatorio(raizB, 2));
+		
+	}
 	
 	// Testar busca recursiva pelo nó de operação sorteado. OK
 	// Testar contagem de nós de operação numa árvore. OK
