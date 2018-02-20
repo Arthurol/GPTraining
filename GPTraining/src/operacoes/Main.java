@@ -2,6 +2,7 @@ package operacoes;
 
 
 import java.util.Collections;
+import java.util.Random;
 import java.util.Scanner;
 
 import gptraining.inicializacao.GeradorPopulacaoInicial;
@@ -20,35 +21,14 @@ public class Main {
 		
 		//dataset x + 5
 		Dataset dataset = new Dataset();
-		dataset.adiciona(1, 6);
-		dataset.adiciona(2, 7);
-		dataset.adiciona(3, 8);
-		dataset.adiciona(4, 9);
-		dataset.adiciona(5, 10);
-
+		monta(dataset);
 		
-		
-		int tamanhoPopulacao = 20;
+		int tamanhoPopulacao = 50;
 		int profundidadeLimiteArvores = 3;
+		Random random = new Random();
+		random.setSeed(1234567);
 		
-		Populacao primeiraGeracao = geradorPop.inicializacaoRampedHalfAndHalf(tamanhoPopulacao, profundidadeLimiteArvores);
-		
-		/*
-			ArvoreExpressao teste1 = new ArvoreExpressao();
-			teste1.setRaiz(populacao.getIndividuos().get(0).getRaiz());
-			System.out.println("\nTeste1: " + teste1.stringExpressao(teste1.getRaiz()));
-			
-			ArvoreExpressao teste2 = new ArvoreExpressao();
-			teste2.setRaiz(populacao.getIndividuos().get(1).getRaiz());
-			System.out.println("\nTeste2: " + teste2.stringExpressao(teste2.getRaiz()));
-			
-			ArvoreExpressao resultado = new ArvoreExpressao();
-			resultado.setRaiz(operacaoGenetica.combina(teste1, teste2).getRaiz());
-			System.out.println("\nResultado: " + resultado.stringExpressao(resultado.getRaiz()));
-			
-			System.out.println("\nNovamente Teste1: " + teste1.stringExpressao(teste1.getRaiz()));
-			System.out.println("\nNovamente Teste2: " + teste2.stringExpressao(teste2.getRaiz()));
-		*/
+		Populacao primeiraGeracao = geradorPop.inicializacaoRampedHalfAndHalf(tamanhoPopulacao, profundidadeLimiteArvores, random);
 		
 		System.out.println("\n\n<GERAÇÃO 0 -------------------------------------------------->");
 		for (ArvoreExpressao arvore : primeiraGeracao.getIndividuos())
@@ -60,11 +40,21 @@ public class Main {
 		Populacao proximaGeracao = new Populacao();
 		proximaGeracao.setIndividuos(primeiraGeracao.getIndividuos());
 		
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < 10; i++)
 		{
-			proximaGeracao = operacaoGenetica.selecao(proximaGeracao, dataset);
+			proximaGeracao.setIndividuos(operacaoGenetica.selecao(proximaGeracao, dataset, random).getIndividuos());
+			proximaGeracao.setNumeroGeracao(proximaGeracao.getNumeroGeracao() + 1);
 		}
 		
+		System.out.println("\n Árvore de melhor aptidão: " + proximaGeracao.getIndividuos().get(0).stringExpressao(proximaGeracao.getIndividuos().get(0).getRaiz()));
+	}
+	
+	public static void monta (Dataset dataset)
+	{
+		for (int x = 1; x <= 5; x++)
+		{
+			dataset.adiciona(x, 4 * x);
+		}
 	}
 
 }

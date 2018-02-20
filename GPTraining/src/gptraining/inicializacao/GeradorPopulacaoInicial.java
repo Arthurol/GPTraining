@@ -1,5 +1,7 @@
 package gptraining.inicializacao;
 
+import java.util.Random;
+
 import gptraining.model.ArvoreExpressao;
 import gptraining.model.Populacao;
 
@@ -10,7 +12,7 @@ public class GeradorPopulacaoInicial {
 	 * ambos métodos de construção de árvores aleatórias.
 	 * 
 	 */
-	public Populacao inicializacaoRampedHalfAndHalf(int tamanhoPopulacao, int profundidadeLimite)
+	public Populacao inicializacaoRampedHalfAndHalf(int tamanhoPopulacao, int profundidadeLimite, Random random)
 	{
 		Populacao populacaoInicial =  new Populacao(tamanhoPopulacao);
 		GeradorArvoreMetodoGrow geradorGrow = new GeradorArvoreMetodoGrow();
@@ -34,7 +36,7 @@ public class GeradorPopulacaoInicial {
 			while(true)
 			{
 				//árvore aleatória gerada
-				arvoreGrow = geradorGrow.gerarArvore(profundidadeLimite);
+				arvoreGrow = geradorGrow.gerarArvore(profundidadeLimite, random);
 				System.out.println("Árvore Grow " + contadorGrow + ": " + arvoreGrow.stringExpressao(arvoreGrow.getRaiz()));
 				
 				//árvore simplificada antes da verificação de validade, para eliminar casos como (x / x) e (x - x)
@@ -59,7 +61,7 @@ public class GeradorPopulacaoInicial {
 			ArvoreExpressao arvoreFull = new ArvoreExpressao();
 			while(true)
 			{
-				arvoreFull = geradorFull.gerarArvore(profundidadeLimite);
+				arvoreFull = geradorFull.gerarArvore(profundidadeLimite, random);
 				System.out.println("Árvore Full " + contadorFull + ": " + arvoreFull.stringExpressao(arvoreFull.getRaiz()));
 				arvoreFull = arvoreFull.simplificarArvore(arvoreFull);
 				System.out.println("Árvore Full " + contadorFull + " simplificada: " + arvoreFull.stringExpressao(arvoreFull.getRaiz()));
@@ -73,10 +75,7 @@ public class GeradorPopulacaoInicial {
 			}
 			contadorFull++;
 			populacaoInicial.adicionaIndividuo(arvoreFull);
-		}
-		
-		populacaoInicial.embaralhaPopulacao();
-		
+		}	
 		return populacaoInicial;
 	}
 }

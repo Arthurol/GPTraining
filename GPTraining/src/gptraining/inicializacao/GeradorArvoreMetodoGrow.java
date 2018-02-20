@@ -11,12 +11,12 @@ import java.util.Random;
 public class GeradorArvoreMetodoGrow implements IGeradorArvore 
 {
 
-	public ArvoreExpressao gerarArvore(int profundidadeLimite)
+	public ArvoreExpressao gerarArvore(int profundidadeLimite, Random random)
 	{
 		if (profundidadeLimite > 0)
 		{
 			No raiz = new No();			
-			raiz = geraArvoreMetodoGrow(profundidadeLimite);
+			raiz = geraArvoreMetodoGrow(profundidadeLimite, random);
 			
 			ArvoreExpressao arvore = new ArvoreExpressao(raiz);
 			return arvore;
@@ -24,51 +24,50 @@ public class GeradorArvoreMetodoGrow implements IGeradorArvore
 		return null;
 	}
 	
-	private No geraArvoreMetodoGrow(int profundidadeLimite)
+	private No geraArvoreMetodoGrow(int profundidadeLimite, Random random)
 	{
 		if (profundidadeLimite == 0)
 		{
 			No folha = new No();
-			folha.preenchimentoAleatorioTerminal();
+			folha.preenchimentoAleatorioTerminal(random);
 			return folha;
 		}
 		
 		No raizSubArvore = new No();
-		raizSubArvore.preenchimentoAleatorioOperador();
+		raizSubArvore.preenchimentoAleatorioOperador(random);
 
 		if (profundidadeLimite == 1)
 		{
-			raizSubArvore.setNoFilhoEsquerda(geraArvoreMetodoGrow(0));
-			raizSubArvore.setNoFilhoDireita(geraArvoreMetodoGrow(0));
+			raizSubArvore.setNoFilhoEsquerda(geraArvoreMetodoGrow(0, random));
+			raizSubArvore.setNoFilhoDireita(geraArvoreMetodoGrow(0, random));
 			
 		} else 
 		{
-			Random random = new Random();
 			int decisao = random.nextInt(4);
 			
 			switch (decisao)
 			{
 			//filho à esquerda será operador e filho à direita será terminal
 			case 0:
-				raizSubArvore.setNoFilhoEsquerda(geraArvoreMetodoGrow(profundidadeLimite - 1));
-				raizSubArvore.setNoFilhoDireita(geraArvoreMetodoGrow(0));
+				raizSubArvore.setNoFilhoEsquerda(geraArvoreMetodoGrow(profundidadeLimite - 1, random));
+				raizSubArvore.setNoFilhoDireita(geraArvoreMetodoGrow(0, random));
 				break;
 				
 			//filho à esquerda será terminal e filho à direita será operador
 			case 1:
-				raizSubArvore.setNoFilhoEsquerda(geraArvoreMetodoGrow(0));
-				raizSubArvore.setNoFilhoDireita(geraArvoreMetodoGrow(profundidadeLimite - 1));
+				raizSubArvore.setNoFilhoEsquerda(geraArvoreMetodoGrow(0, random));
+				raizSubArvore.setNoFilhoDireita(geraArvoreMetodoGrow(profundidadeLimite - 1, random));
 				break;
 				
 			//Ambos os filhos serão operadores
 			case 2:
-				raizSubArvore.setNoFilhoEsquerda(geraArvoreMetodoGrow(profundidadeLimite - 1));
-				raizSubArvore.setNoFilhoDireita(geraArvoreMetodoGrow(profundidadeLimite - 1));
+				raizSubArvore.setNoFilhoEsquerda(geraArvoreMetodoGrow(profundidadeLimite - 1, random));
+				raizSubArvore.setNoFilhoDireita(geraArvoreMetodoGrow(profundidadeLimite - 1, random));
 				break;
 				
 			//Ambos os filhos serão terminais
 			case 3:
-				return geraArvoreMetodoGrow(1);
+				return geraArvoreMetodoGrow(1, random);
 		
 			}
 		}

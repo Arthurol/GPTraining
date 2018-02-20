@@ -11,6 +11,7 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 {
 	private @Getter @Setter No raiz;
 	private @Getter @Setter double aptidao;
+	private @Getter @Setter String expressao; 
 	
 	public ArvoreExpressao(No noRaiz)
 	{
@@ -19,20 +20,37 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 		
 		if (noRaiz != null)
 		{
-			this.raiz.noFilhoDireita = (noRaiz.noFilhoDireita) == null ? null : noRaiz.getNoFilhoDireita();
-			this.raiz.noFilhoEsquerda = (noRaiz.noFilhoEsquerda) == null ? null : noRaiz.getNoFilhoEsquerda();
+			this.raiz.noFilhoDireita = (noRaiz.noFilhoDireita) == null ? null : new No(noRaiz.getNoFilhoDireita());
+			this.raiz.noFilhoEsquerda = (noRaiz.noFilhoEsquerda) == null ? null : new No(noRaiz.getNoFilhoEsquerda());
 			this.raiz.operador = (noRaiz.operador == null) ? null : noRaiz.getOperador();
 			this.raiz.simboloTerminal = (noRaiz.simboloTerminal == null) ? null : noRaiz.getSimboloTerminal();
 		}
 		else
 			System.out.println("Construtor de ArvoreExpressao chamado com no raiz null");
+		
+		this.expressao = stringExpressao(noRaiz);
 	}
 	
 	public ArvoreExpressao()
 	{
 		this.raiz = new No();
 		this.aptidao = 0;
+		this.expressao = "";
 	}
+	
+	/*public ArvoreExpressao(ArvoreExpressao arvore)
+	{
+		No noRaiz = arvore.getRaiz();
+		
+		this.raiz = new No();	
+		this.raiz.noFilhoDireita = (noRaiz.noFilhoDireita) == null ? null : noRaiz.getNoFilhoDireita();
+		this.raiz.noFilhoEsquerda = (noRaiz.noFilhoEsquerda) == null ? null : noRaiz.getNoFilhoEsquerda();
+		this.raiz.operador = (noRaiz.operador == null) ? null : noRaiz.getOperador();
+		this.raiz.simboloTerminal = (noRaiz.simboloTerminal == null) ? null : noRaiz.getSimboloTerminal();
+	
+		this.aptidao = arvore.getAptidao();
+		this.expressao = stringExpressao(arvore.getRaiz());
+	}*/
 	
 	/**
 	 * Recursivamente resolve as operações matemáticas da árvore, representada pelo nó raiz, retornando um resultado double convertido em String. 

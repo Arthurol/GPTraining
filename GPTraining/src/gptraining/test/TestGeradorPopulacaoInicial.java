@@ -11,6 +11,7 @@ import gptraining.model.Populacao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.Test;
 
@@ -19,6 +20,7 @@ public class TestGeradorPopulacaoInicial {
 	@Test
 	public void test1() 
 	{
+		Random random = new Random();
 		GeradorPopulacaoInicial geradorPop = new GeradorPopulacaoInicial();
 		GeradorArvoreMetodoFull geradorFull = new GeradorArvoreMetodoFull();
 		
@@ -29,7 +31,7 @@ public class TestGeradorPopulacaoInicial {
 			ArvoreExpressao arvoreFull = new ArvoreExpressao();
 			while(true)
 			{
-				arvoreFull = geradorFull.gerarArvore(3);
+				arvoreFull = geradorFull.gerarArvore(3, random);
 				
 				if (arvoreFull.checaExistenciaDeNoX(arvoreFull.getRaiz()))
 					break;
@@ -40,9 +42,9 @@ public class TestGeradorPopulacaoInicial {
 		raizTeste.noFilhoEsquerda = new No();
 		raizTeste.noFilhoDireita = new No();
 		
-		raizTeste.preenchimentoAleatorioOperador();
-		raizTeste.noFilhoEsquerda.preenchimentoAleatorioTerminal();
-		raizTeste.noFilhoDireita.preenchimentoAleatorioTerminal();
+		raizTeste.preenchimentoAleatorioOperador(random);
+		raizTeste.noFilhoEsquerda.preenchimentoAleatorioTerminal(random);
+		raizTeste.noFilhoDireita.preenchimentoAleatorioTerminal(random);
 		
 		ArvoreExpressao patinhoFeio = new ArvoreExpressao(raizTeste);
 		
@@ -57,12 +59,13 @@ public class TestGeradorPopulacaoInicial {
 	
 	public void test2() 
 	{
+		Random random = new Random();
 		GeradorPopulacaoInicial geradorPop = new GeradorPopulacaoInicial();
-		Populacao pop = geradorPop.inicializacaoRampedHalfAndHalf(100, 2);
+		Populacao pop = geradorPop.inicializacaoRampedHalfAndHalf(100, 2, random);
 		
 		assertTrue(contaArvoresFull(pop, 7) >= 50);
 		
-		Populacao pop2 = geradorPop.inicializacaoRampedHalfAndHalf(10, 1);
+		Populacao pop2 = geradorPop.inicializacaoRampedHalfAndHalf(10, 1, random);
 		assertFalse(contaArvoresFull(pop2, 3) == 0);
 
 	}

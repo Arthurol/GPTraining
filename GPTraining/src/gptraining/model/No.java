@@ -46,6 +46,14 @@ public class No
 		this.noFilhoEsquerda = null;
 		this.noFilhoDireita = null;
 	}
+	
+	public No(No no)
+	{
+		this.setOperador(no.getOperador());
+		this.setNoFilhoDireita((no.noFilhoDireita) == null ? null : new No(no.getNoFilhoDireita()));
+		this.setNoFilhoEsquerda((no.noFilhoEsquerda) == null ? null : new No(no.getNoFilhoEsquerda()));
+		this.setSimboloTerminal(no.getSimboloTerminal());
+	}
 
 	public Operacao getOperador()
 	{
@@ -60,9 +68,8 @@ public class No
 		return false;
 	}
 	
-	public void preenchimentoAleatorioOperador()
+	public void preenchimentoAleatorioOperador(Random random)
 	{
-		Random random = new Random();
 		int numDecisaoOperador = random.nextInt(4);
 		this.operador = Operacao.get(numDecisaoOperador);
 	}
@@ -72,12 +79,9 @@ public class No
 	 * TODO
 	 * Carece de atualização, pois ainda está trabalhando com inteiros. Terminal numérico agora é double.
 	 */
-	public void preenchimentoAleatorioTerminal()
+	public void preenchimentoAleatorioTerminal(Random random)
 	{
-		Random random = new Random();
 		String terminalEscolhido = null;
-		
-		
 		int numDecisaoTerminal = random.nextInt(12) ; 
 		int terminalInt = (numDecisaoTerminal % 12) + 1;  //Soma com 1 para evitar terminal 0
 		

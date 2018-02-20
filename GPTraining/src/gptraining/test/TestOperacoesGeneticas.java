@@ -2,6 +2,8 @@ package gptraining.test;
 
 import static org.junit.Assert.*;
 
+import java.util.Random;
+
 import org.junit.Test;
 
 import gptraining.model.ArvoreExpressao;
@@ -47,22 +49,39 @@ public class TestOperacoesGeneticas {
 	
 	@Test
 	public void testMutacao() {		
+		Random random = new Random();
 		OperacaoGenetica operacao = new OperacaoGenetica();
 		
 		No raizA = new No('+', new No('*', new No("x"), new No("x")), new No(1.0)); //árvore x² + 1
-		assertTrue(operacao.mutacaoPontoAleatorio(raizA, 0));
+		assertTrue(operacao.mutacaoPontoAleatorio(raizA, 0, random));
 		
 		operacao = new OperacaoGenetica();
 		
 		No raizB = new No('+', new No("x"), new No()); //árvore com filho direito sem preenchimento de terminal ou operação
-		assertFalse(operacao.mutacaoPontoAleatorio(raizB, 2));
+		assertFalse(operacao.mutacaoPontoAleatorio(raizB, 2, random));
 		
 	}
 	
-	// Testar busca recursiva pelo nó de operação sorteado. OK
-	// Testar contagem de nós de operação numa árvore. OK
-	//TODO Buscar maneira que substitua a utilização de atributos de classe para não "perder" o valor do contador durante a recursão.
+	@Test
+	public void testSelecao() {		
+		Random random = new Random();
+		random.setSeed(1234567);
+		OperacaoGenetica operacao = new OperacaoGenetica();
+		
+		No raizA = new No('+', new No('*', new No("x"), new No("x")), new No(1.0)); //árvore x² + 1
+		assertTrue(operacao.mutacaoPontoAleatorio(raizA, 0, random));
+		
+		operacao = new OperacaoGenetica();
+		
+		No raizB = new No('+', new No("x"), new No()); //árvore com filho direito sem preenchimento de terminal ou operação
+		assertFalse(operacao.mutacaoPontoAleatorio(raizB, 2, random));
+	}	
 	
-	//Como testar o funcionamento do método subtreeCrossover com toda a aleatóriedade existente em seu funcionamento?
-	
+	public static void monta (Dataset dataset)
+	{
+		for (int x = 1; x <= 5; x++)
+		{
+			dataset.adiciona(x, 4 * x);
+		}
+	}
 }
