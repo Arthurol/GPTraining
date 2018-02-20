@@ -18,8 +18,6 @@ public class Main {
 	{
 		GeradorPopulacaoInicial geradorPop =  new GeradorPopulacaoInicial();
 		OperacaoGenetica operacaoGenetica = new OperacaoGenetica();
-		
-		//dataset x + 5
 		Dataset dataset = new Dataset();
 		monta(dataset);
 		
