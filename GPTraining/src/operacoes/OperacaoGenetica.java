@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import gptraining.inicializacao.GeradorArvoreMetodoGrow;
 import gptraining.model.ArvoreExpressao;
 import gptraining.model.CalculadorFitness;
 import gptraining.model.Dataset;
@@ -20,6 +21,8 @@ public class OperacaoGenetica {
 	private int contadorOperacoesCrossover;
 	private int contadorNosMutacao;
 	private static double probabilidadeCrossover = 0.85;
+	private static double probabilidadeTorneio = 0.7;
+	private static int tamanhoTorneio = 10;
 	
 	public OperacaoGenetica()
 	{
@@ -55,18 +58,42 @@ public class OperacaoGenetica {
 		else
 			arvoreCombinada = combina(ArvoreB, ArvoreA);
 		
+		arvoreCombinada = arvoreCombinada.simplificarArvore(arvoreCombinada);
+		
 		//Se a árvore gerada no crossover não possuir um terminal x, o crossover é feito novamente entre as duas árvores iniciais.
 		if (!arvoreCombinada.checaExistenciaDeNoX(arvoreCombinada.getRaiz()))
 		{
-			System.out.println("Inexistência de terminal x na árvore descendente");
+			System.out.println("Inexistência de terminal x na árvore descendente, gerada do crossover entre " + arvoreA.stringExpressao(arvoreA.getRaiz()) + " e " + arvoreB.stringExpressao(arvoreB.getRaiz()));
 			contadorOperacoesCrossover = 0;
 			return null;
 		}
 		
 		//System.out.println("Árvore descendente (A x B): " + arvoreCombinada.stringExpressao(arvoreCombinada.getRaiz()));
 		contadorOperacoesCrossover = 0;
+		arvoreCombinada.setExpressao(arvoreCombinada.stringExpressao(arvoreCombinada.getRaiz()));
 		return arvoreCombinada;
 	}
+	
+	/**
+	 * Retorna a raiz da subarvore localizada no ponto de Crossover sorteado 
+	 */
+	public No quebraNoPontoCrossover(No no, int pontoCrossover)
+	{
+		if (no.getOperador() == null)
+			return null;
+		
+	    if ((this.contadorOperacoesCrossover == pontoCrossover) && no.getOperador() != null)
+	    	return new No(no);
+	    
+	    if ((this.contadorOperacoesCrossover != pontoCrossover) && no.getOperador() != null )
+	    	this.contadorOperacoesCrossover++;
+	    
+	    No noQuebra = quebraNoPontoCrossover(no.getNoFilhoEsquerda(), pontoCrossover);
+	    if (noQuebra == null)
+	    	noQuebra = quebraNoPontoCrossover(no.getNoFilhoDireita(), pontoCrossover);
+	    
+	    return noQuebra;
+    }
 	
 	/**
 	 * Método que realiza uma mutação de ponto(point mutation)
@@ -76,8 +103,15 @@ public class OperacaoGenetica {
 		ArvoreExpressao arvoreMutada = new ArvoreExpressao(arvore.getRaiz());
 		int quantidadeNos = arvore.getTamanhoArvore(arvore.getRaiz());
 		int pontoMutacao = random.nextInt(quantidadeNos);
-		mutacaoPontoAleatorio(arvoreMutada.getRaiz(), pontoMutacao, random);
-		arvoreMutada.setAptidao(0);
+		
+		//Mutação com grande potencial de alteração da árvore
+		No raizArvoreMutada = mutacaoPontoAleatorioRadical(arvoreMutada.getRaiz(), pontoMutacao, arvore.getProfundidade(arvore.getRaiz()), random);
+		arvoreMutada = new ArvoreExpressao(raizArvoreMutada);
+		
+		//Mutação de baixo impacto
+		//mutacaoPontoAleatorioSimples(arvoreMutada.getRaiz(), pontoMutacao, random);
+		
+		arvoreMutada.simplificarArvore(arvoreMutada);
 		arvoreMutada.setExpressao(arvoreMutada.stringExpressao(arvoreMutada.getRaiz()));
 		contadorNosMutacao = 0;
 		return arvoreMutada;
@@ -85,9 +119,58 @@ public class OperacaoGenetica {
 	
 	/**
 	 * Método que percorre a árvore até encontrar o nó representado pelo ponto de mutação. Ao achá-lo, realiza sua substituição 
+	 * por uma árvore grow de tamanho máximo igual a altura da árvore original.
+	 */
+	public No mutacaoPontoAleatorioRadical(No noRaiz, int pontoMutacao, int profundidadeArvoreOrigem, Random random) 
+	{
+		if (noRaiz == null)
+			return null;
+		
+	    if (this.contadorNosMutacao == pontoMutacao)
+	    {	
+	    	GeradorArvoreMetodoGrow geradorArvoreGrow = new GeradorArvoreMetodoGrow();
+			ArvoreExpressao arvoreGrow = geradorArvoreGrow.gerarArvore(profundidadeArvoreOrigem, random);
+	    	
+			if (pontoMutacao == 0 && noRaiz.possuiFilhos())
+			{
+				double sorteio = random.nextDouble();
+				if (sorteio < 0.5)
+					noRaiz.setNoFilhoEsquerda(new No(arvoreGrow.getRaiz()));
+				else
+					noRaiz.setNoFilhoDireita(new No(arvoreGrow.getRaiz()));
+				
+				return noRaiz;
+			}
+			else
+			{
+				this.contadorNosMutacao++;
+				noRaiz = new No(arvoreGrow.getRaiz());
+				return noRaiz;
+			}
+	    }
+	   
+	    if (this.contadorNosMutacao != pontoMutacao)
+	    {
+	    	this.contadorNosMutacao++;
+	    	
+	    	if (!noRaiz.possuiFilhos())
+	    		return noRaiz;
+	    	
+	    	else
+	    	{
+	    		noRaiz.setNoFilhoEsquerda(mutacaoPontoAleatorioRadical(noRaiz.getNoFilhoEsquerda(), pontoMutacao, profundidadeArvoreOrigem, random));
+			    noRaiz.setNoFilhoDireita(mutacaoPontoAleatorioRadical(noRaiz.getNoFilhoDireita(), pontoMutacao, profundidadeArvoreOrigem, random));
+			    return noRaiz;
+	    	}	
+	    }    	
+	    return null;
+	}
+	
+	/**
+	 * Método que percorre a árvore até encontrar o nó representado pelo ponto de mutação. Ao achá-lo, realiza sua substituição 
 	 * por um elemento aleatório equivalente (operador por operador e terminal por terminal)
 	 */
-	public boolean mutacaoPontoAleatorio(No noRaiz, int pontoMutacao, Random random) 
+	public boolean mutacaoPontoAleatorioSimples(No noRaiz, int pontoMutacao, Random random) 
 	{
 		if (noRaiz == null)
 			return false;
@@ -117,9 +200,9 @@ public class OperacaoGenetica {
 	    if (this.contadorNosMutacao != pontoMutacao) 
 	    	this.contadorNosMutacao++;
 	    
-	    if (!mutacaoPontoAleatorio(noRaiz.getNoFilhoEsquerda(), pontoMutacao, random))
+	    if (!mutacaoPontoAleatorioSimples(noRaiz.getNoFilhoEsquerda(), pontoMutacao, random))
 	    {
-	    	return mutacaoPontoAleatorio(noRaiz.getNoFilhoDireita(), pontoMutacao, random);
+	    	return mutacaoPontoAleatorioSimples(noRaiz.getNoFilhoDireita(), pontoMutacao, random);
 	    }
 
 		return true;
@@ -167,16 +250,17 @@ public class OperacaoGenetica {
 			
 			double escolhaOperadorGenetico = random.nextDouble();
 			ArvoreExpressao arvoreProduto = new ArvoreExpressao();
+			List<ArvoreExpressao> vencedoresTorneio = new ArrayList<ArvoreExpressao>();
 			
 			if (escolhaOperadorGenetico < probabilidadeCrossover)
 			{
 				while(true)
 				{
-					List<ArvoreExpressao> candidatosA = selecaoPorTorneio(populacao, random);
-					List<ArvoreExpressao> candidatosB = selecaoPorTorneio(populacao, random);
+					/* Crossover Torneio Customizado 
+					List<ArvoreExpressao> candidatosA = torneioCustomizado(populacao, random);
+					List<ArvoreExpressao> candidatosB = torneioCustomizado(populacao, random);
 					int paiA = random.nextInt(candidatosA.size());
 					int paiB = random.nextInt(candidatosB.size());
-					
 					ArvoreExpressao arvoreA = new ArvoreExpressao(candidatosA.get(paiA).getRaiz());
 					ArvoreExpressao arvoreB = new ArvoreExpressao(candidatosB.get(paiB).getRaiz());
 					
@@ -190,7 +274,7 @@ public class OperacaoGenetica {
 						arvoreA.setAptidao(calculador.calcula(arvoreA, dataset) == -1 ? 1000000 : calculador.calcula(arvoreA, dataset));
 						arvoreB.setAptidao(calculador.calcula(arvoreB, dataset) == -1 ? 1000000 : calculador.calcula(arvoreB, dataset));
 						
-						//compararEstruturaNos com problema de null pointer
+						
 						
 						//arvoreProduto = new ArvoreExpressao(subtreeCrossover(arvoreA, arvoreB, random));
 						arvoreProduto = new ArvoreExpressao(subtreeCrossover(arvoreA, arvoreB, random).getRaiz());
@@ -207,20 +291,50 @@ public class OperacaoGenetica {
 						System.out.println("Exceção no crossover entre as árvores:");
 						System.out.println(arvoreA.stringExpressao(arvoreA.getRaiz()) + " e " + arvoreB.stringExpressao(arvoreB.getRaiz()));
 					}
+					*/
+					
+					//Crossover Torneio Clássico
+					try
+					{
+						vencedoresTorneio = torneioClassico(tamanhoTorneio, probabilidadeTorneio, populacao, random, 2);
+						arvoreProduto = new ArvoreExpressao(subtreeCrossover(vencedoresTorneio.get(0), vencedoresTorneio.get(1), random).getRaiz());
+						
+						if (arvoreProduto != null)
+						{
+							if (arvoreProduto.checaValidadeArvore(arvoreProduto.getRaiz()) && arvoreProduto.checaExistenciaDeNoX(arvoreProduto.getRaiz()))
+							{
+								break;
+							}
+						}
+					} catch (Exception e)
+					{
+						if (vencedoresTorneio.isEmpty())
+						{
+							System.out.println("Exceção no crossover entre as árvores:");
+							System.out.println(vencedoresTorneio.get(0).stringExpressao(vencedoresTorneio.get(0).getRaiz()) + " e " + vencedoresTorneio.get(1).stringExpressao(vencedoresTorneio.get(1).getRaiz()));
+						}
+					}
 				}
 			}
 			else //sorteio determinou que o operador genético será mutação
 			{
 				while(true)
 				{
-					List<ArvoreExpressao> candidatosMutacao = selecaoPorTorneio(populacao, random);
-					//arvoreProduto = new ArvoreExpressao(mutacao(candidatosMutacao.get(random.nextInt(candidatosMutacao.size())), random));
-					arvoreProduto = new ArvoreExpressao(mutacao(candidatosMutacao.get(random.nextInt(candidatosMutacao.size())), random).getRaiz());
+					//Mutação Torneio Customizado
+					//List<ArvoreExpressao> candidatosMutacao = torneioCustomizado(populacao, random);
+					//arvoreProduto = new ArvoreExpressao(mutacao(candidatosMutacao.get(random.nextInt(candidatosMutacao.size())), random).getRaiz());
+					
+					//Mutação Torneio Clássico
+					vencedoresTorneio = torneioClassico(tamanhoTorneio, probabilidadeTorneio, populacao, random, 1);
+					arvoreProduto = new ArvoreExpressao(mutacao(vencedoresTorneio.get(0), random).getRaiz());
 					
 					if (arvoreProduto.checaValidadeArvore(arvoreProduto.getRaiz()) && arvoreProduto.checaExistenciaDeNoX(arvoreProduto.getRaiz()))
 						break;
 				}
 			}		
+			
+			double aptidao = calculador.calcula(arvoreProduto, dataset);
+			arvoreProduto.setAptidao(aptidao == -1 ? 1000000 : aptidao);
 			proximaGeracao.adicionaIndividuo(arvoreProduto);	
 		}
 	
@@ -231,12 +345,6 @@ public class OperacaoGenetica {
 			arv.setAptidao(aptidao == -1 ? 1000000 : aptidao);
 		}
 		*/
-		
-		for (int i = 0; i < proximaGeracao.getIndividuos().size(); i++)
-		{
-			double aptidao = calculador.calcula(proximaGeracao.getIndividuos().get(i), dataset);
-			proximaGeracao.getIndividuos().get(i).setAptidao(aptidao == -1 ? 1000000 : aptidao);
-		}
 		
 		Collections.sort(proximaGeracao.getIndividuos());
 
@@ -249,25 +357,6 @@ public class OperacaoGenetica {
 		return proximaGeracao;
 	}
 	
-	
-	public No quebraNoPontoCrossover(No no, int pontoCrossover)
-	{
-		if (no.getOperador() == null)
-			return null;
-		
-	    if ((this.contadorOperacoesCrossover == pontoCrossover) && no.getOperador() != null)
-	    	return new No(no);
-	    
-	    if ((this.contadorOperacoesCrossover != pontoCrossover) && no.getOperador() != null )
-	    	this.contadorOperacoesCrossover++;
-	    
-	    No noQuebra = quebraNoPontoCrossover(no.getNoFilhoEsquerda(), pontoCrossover);
-	    if (noQuebra == null)
-	    	noQuebra = quebraNoPontoCrossover(no.getNoFilhoDireita(), pontoCrossover);
-	    
-	    return noQuebra;
-    }
-	
 	/**
 	 * Substitui aleatoriamente um dos nós filhos da subarvore A pela subarvore B e retorna a árvore resultante.
 	 */
@@ -279,7 +368,7 @@ public class OperacaoGenetica {
 		return arvoreResultado;
 	}
 	
-	private List<ArvoreExpressao> selecaoPorTorneio(Populacao populacao, Random random)
+	private List<ArvoreExpressao> torneioCustomizado(Populacao populacao, Random random)
 	{
 		double escolhaGrupo = random.nextDouble();
 		List<ArvoreExpressao> grupoTorneio = new ArrayList<ArvoreExpressao>();
@@ -320,5 +409,63 @@ public class OperacaoGenetica {
 		}
 
 		return grupoSelecionado;
+	}
+	
+	/**
+	 * Implementação de torneio clássico. Um determinado numero de indivíduos é selecionado da população para participar do torneio. 
+	 * A probabilidade p equivale a chance do indivíduo com melhor aptidão ser selecionado deste grupo. O segundo melhor individuo tem chance equivalente a p*(1-p), o terceiro a p*(1-p)² e assim por diante.
+	 */
+	private List<ArvoreExpressao> torneioClassico (int tamanhoTorneio, double probabilidade, Populacao populacao, Random random, int numeroVencedores)
+	{
+		if (probabilidade > 1)
+		{
+			System.out.println("Valor da probabilidade p maior que 1");
+			return null;
+		}
+			
+		List<ArvoreExpressao> participantes = new ArrayList<ArvoreExpressao>();
+		List<ArvoreExpressao> vencedores = new ArrayList<ArvoreExpressao>();
+		List<Integer> sorteioIndices = new ArrayList<Integer>();
+		
+		for (int i = 0; i < populacao.getIndividuos().size(); i++)
+		{
+			sorteioIndices.add(i);
+		}
+		Collections.shuffle(sorteioIndices);
+		
+		for (int i = 0; i < tamanhoTorneio; i++)
+		{
+			participantes.add(populacao.getIndividuos().get(sorteioIndices.get(i)));
+		}
+		
+		Collections.sort(participantes);
+		
+		double p = probabilidade;
+		int indiceVencedor = 0;
+		for (int i = 0; i < numeroVencedores; i++)
+		{
+			double sorteio = random.nextDouble();
+			double pLocal = p;
+			int expoente = 1;
+			
+			while(true)
+			{
+				if (sorteio < pLocal)
+				{
+					vencedores.add(participantes.get(indiceVencedor));
+					participantes.remove(indiceVencedor);
+					break;
+				}
+				else
+				{
+					pLocal += (p * Math.pow(1 - p, expoente));
+					indiceVencedor++;
+					expoente++;
+				}
+			}
+			
+			indiceVencedor = 0;
+		}
+		return vencedores;
 	}
 }

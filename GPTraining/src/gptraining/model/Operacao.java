@@ -10,7 +10,8 @@ public enum Operacao
 	Soma(0, '+'),
 	Multiplicacao(1, '*'),
 	Subtracao(2, '-'),
-	Divisao(3, '/');
+	Divisao(3, '/'),
+	Exponenciacao(4, '^');
 	
 	public @Getter int codigo;
 	public @Getter char operador;

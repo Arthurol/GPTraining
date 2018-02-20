@@ -53,12 +53,12 @@ public class TestOperacoesGeneticas {
 		OperacaoGenetica operacao = new OperacaoGenetica();
 		
 		No raizA = new No('+', new No('*', new No("x"), new No("x")), new No(1.0)); //árvore x² + 1
-		assertTrue(operacao.mutacaoPontoAleatorio(raizA, 0, random));
+		assertTrue(operacao.mutacaoPontoAleatorioSimples(raizA, 0, random));
 		
 		operacao = new OperacaoGenetica();
 		
 		No raizB = new No('+', new No("x"), new No()); //árvore com filho direito sem preenchimento de terminal ou operação
-		assertFalse(operacao.mutacaoPontoAleatorio(raizB, 2, random));
+		assertFalse(operacao.mutacaoPontoAleatorioSimples(raizB, 2, random));
 		
 	}
 	
@@ -69,12 +69,12 @@ public class TestOperacoesGeneticas {
 		OperacaoGenetica operacao = new OperacaoGenetica();
 		
 		No raizA = new No('+', new No('*', new No("x"), new No("x")), new No(1.0)); //árvore x² + 1
-		assertTrue(operacao.mutacaoPontoAleatorio(raizA, 0, random));
+		assertTrue(operacao.mutacaoPontoAleatorioSimples(raizA, 0, random));
 		
 		operacao = new OperacaoGenetica();
 		
 		No raizB = new No('+', new No("x"), new No()); //árvore com filho direito sem preenchimento de terminal ou operação
-		assertFalse(operacao.mutacaoPontoAleatorio(raizB, 2, random));
+		assertFalse(operacao.mutacaoPontoAleatorioSimples(raizB, 2, random));
 	}	
 	
 	public static void monta (Dataset dataset)

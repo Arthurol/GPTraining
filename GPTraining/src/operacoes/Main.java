@@ -26,7 +26,7 @@ public class Main {
 		int tamanhoPopulacao = 50;
 		int profundidadeLimiteArvores = 3;
 		Random random = new Random();
-		random.setSeed(1234567);
+		//random.setSeed(1234567);
 		
 		Populacao primeiraGeracao = geradorPop.inicializacaoRampedHalfAndHalf(tamanhoPopulacao, profundidadeLimiteArvores, random);
 		
@@ -35,12 +35,12 @@ public class Main {
 		{
 			System.out.println(arvore.stringExpressao(arvore.getRaiz()));
 		}
-		System.out.println("<FIM GERAÇÃO 0 -------------------------------------------------->");
+		System.out.println("<FIM GERAÇÃO 0 -------------------------------------------------->\n");
 		
 		Populacao proximaGeracao = new Populacao();
 		proximaGeracao.setIndividuos(primeiraGeracao.getIndividuos());
 		
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 20; i++)
 		{
 			proximaGeracao.setIndividuos(operacaoGenetica.selecao(proximaGeracao, dataset, random).getIndividuos());
 			proximaGeracao.setNumeroGeracao(proximaGeracao.getNumeroGeracao() + 1);
@@ -53,7 +53,7 @@ public class Main {
 	{
 		for (int x = 1; x <= 5; x++)
 		{
-			dataset.adiciona(x, 4 * x);
+			dataset.adiciona(x, 5 * x);
 		}
 	}
 

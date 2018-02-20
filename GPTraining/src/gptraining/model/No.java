@@ -74,7 +74,6 @@ public class No
 		this.operador = Operacao.get(numDecisaoOperador);
 	}
 	
-	
 	/*
 	 * TODO
 	 * Carece de atualização, pois ainda está trabalhando com inteiros. Terminal numérico agora é double.
@@ -85,8 +84,8 @@ public class No
 		int numDecisaoTerminal = random.nextInt(12) ; 
 		int terminalInt = (numDecisaoTerminal % 12) + 1;  //Soma com 1 para evitar terminal 0
 		
-		/* A chance do terminal ser a variável X é o quádruplo da chance dos outros terminais. Os sorteios 10 e 11 resultarão na 
-		* atribuição de "X" ao terminal. Sorteios menores (de 0 a 9) passarão por um novo processo de aleatoriedade para decidir
+		/* A chance do terminal ser a variável X é o dobro da chance dos outros terminais. Os sorteios 10 e 11 resultarão na 
+		* atribuição de "x" ao terminal. Sorteios menores (de 0 a 9) passarão por um novo processo de aleatoriedade para decidir
 		* o sinal do terminal. 
 		*/
 		if (terminalInt > 9)
