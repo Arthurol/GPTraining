@@ -337,12 +337,6 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 				arvoreSimplificada.setRaiz(quebraOperacaoSimplificavel(arv.getRaiz()));
 				arvoreSimplificada.setExpressao(arvoreSimplificada.stringExpressao(arvoreSimplificada.getRaiz()));
 				
-				/* compararEstruturaNos ainda não está funcionando corretamente
-				if (!compararEstruturaNos(arv.getRaiz(), arvoreSimplificada.getRaiz()))
-				{
-					arv.setRaiz(arvoreSimplificada.getRaiz());
-				}
-				*/
 				if (!arv.getExpressao().equals(arvoreSimplificada.getExpressao()))
 				{
 					arv.setRaiz(arvoreSimplificada.getRaiz());
@@ -359,10 +353,8 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	/**
 	 * Resolve operações entre dois terminais double e entre terminais x (em caso de subtração ou divisão)
 	 */
-	
 	public No quebraOperacaoSimplificavel (No noRaiz)
 	{
-		
 		if (!noRaiz.possuiFilhos())
 			return noRaiz;
 		
@@ -372,29 +364,32 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 			//Se o filho da esquerda for zero
 			if (noRaiz.noFilhoEsquerda.simboloTerminal != null)
 			{
-				if (noRaiz.getNoFilhoEsquerda().equals("0") || noRaiz.getNoFilhoEsquerda().equals("0.0"))
+				if (noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equals("0") || noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equals("0.0"))
 					return new No(0);
 			}
 			
 			//Se o filho da direita for zero
 			if (noRaiz.noFilhoDireita.simboloTerminal != null)
 			{
-				if (noRaiz.getNoFilhoDireita().equals("0") || noRaiz.getNoFilhoDireita().equals("0.0"))
+				if (noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("0") || noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("0.0"))
 					return new No(0);
 			}
 			
-			//Se o filho da esquerda for x e o da direita for 1
-			if (noRaiz.noFilhoEsquerda.simboloTerminal != null)
+			//Se o filho da direita for 1
+			if (noRaiz.noFilhoDireita.simboloTerminal != null)
 			{
-				if (noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equalsIgnoreCase("x") && (noRaiz.getNoFilhoDireita().equals("1.0") || noRaiz.getNoFilhoDireita().equals("1")))
-					return new No("x");
+				if ((noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("1.0") || noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("1")))
+					return new No(noRaiz.getNoFilhoEsquerda());
 			}
 			
-			//Se o filho da direita for x e o da esquerda for 1
-			if (noRaiz.noFilhoEsquerda.simboloTerminal != null)
+			//Se houver multiplicação de 1 por qualquer coisa
+			if (noRaiz.getOperador().toString().equalsIgnoreCase("Multiplicacao"))
 			{
-				if ((noRaiz.getNoFilhoEsquerda().equals("1.0") || noRaiz.getNoFilhoEsquerda().equals("1")) && noRaiz.getNoFilhoDireita().getSimboloTerminal().equalsIgnoreCase("x"))
-					return new No("x");
+				if (noRaiz.noFilhoEsquerda.simboloTerminal != null)
+				{
+					if ((noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equals("1.0") || noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equals("1")))
+						return new No(noRaiz.getNoFilhoDireita());
+				}
 			}
 		}
 		
@@ -402,24 +397,49 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 		if (noRaiz.getOperador().toString().equalsIgnoreCase("Soma") || noRaiz.getOperador().toString().equalsIgnoreCase("Subtracao"))
 		{
 			//Se o filho da direita for 0, a raiz é substituida por seu filho da esquerda
-			if (noRaiz.getNoFilhoDireita().equals("0.0") || noRaiz.getNoFilhoDireita().equals("0"))
-				return new No(noRaiz.getNoFilhoEsquerda());
+			if (noRaiz.noFilhoDireita.simboloTerminal != null)
+			{
+				if (noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("0.0") || noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("0"))
+					return new No(noRaiz.getNoFilhoEsquerda());
+			}
 			
 			if (noRaiz.getOperador().toString().equalsIgnoreCase("Soma"))
 			{
 				//Se o filho da esquerda for 0
-				if (noRaiz.getNoFilhoEsquerda().equals("0.0") || noRaiz.getNoFilhoEsquerda().equals("0"))
-					return new No(noRaiz.getNoFilhoDireita());
+				if (noRaiz.noFilhoEsquerda.simboloTerminal != null)
+				{
+					if (noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equals("0.0") || noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equals("0"))
+						return new No(noRaiz.getNoFilhoDireita());
+				}
+					
+				if (noRaiz.noFilhoDireita.simboloTerminal != null)
+				{
+					if (!noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("x") && Double.valueOf(noRaiz.getNoFilhoDireita().getSimboloTerminal()) < 0)
+					{
+						noRaiz.setOperador(Operacao.Subtracao);
+						noRaiz.setNoFilhoDireita(new No(Double.valueOf(noRaiz.getNoFilhoDireita().getSimboloTerminal()) * (-1)));
+						return noRaiz;
+					}
+				}
 			}
 			
 			if (noRaiz.getOperador().toString().equalsIgnoreCase("Subtracao"))
 			{
-				//Se o filho da direita for x e o da esquerda for 0
-				if (noRaiz.noFilhoEsquerda.simboloTerminal != null)
+				
+				if (noRaiz.noFilhoEsquerda.simboloTerminal != null && noRaiz.noFilhoDireita.simboloTerminal != null)
 				{
-					if ((noRaiz.getNoFilhoEsquerda().equals("0.0") || noRaiz.getNoFilhoEsquerda().equals("0")) && noRaiz.getNoFilhoDireita().getSimboloTerminal().equalsIgnoreCase("x"))
+					//Se o filho da direita for x e o da esquerda for 0
+					if ((noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equals("0.0") || noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equals("0")) && noRaiz.getNoFilhoDireita().getSimboloTerminal().equalsIgnoreCase("x"))
 						return new No('*', new No("x"), new No("-1"));
-				}	
+				
+					//Uma subtração de 0 por x se torna uma multiplicação de x por -1
+					if (!noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("x") && Double.valueOf(noRaiz.getNoFilhoDireita().getSimboloTerminal()) < 0)
+					{
+						noRaiz.setOperador(Operacao.get('+'));
+						noRaiz.setNoFilhoDireita(new No(Double.valueOf(noRaiz.getNoFilhoDireita().getSimboloTerminal()) * (-1)));
+						return noRaiz;
+					}
+				}
 			}		
 		}
 		
@@ -450,79 +470,11 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 		else 
 		{
 			No noAux = noRaiz;
-			
-			if (noAux.getNoFilhoEsquerda().getOperador() != null)
-				noAux.setNoFilhoEsquerda(quebraOperacaoSimplificavel(noAux.getNoFilhoEsquerda()));
-			
-			if (noAux.getNoFilhoDireita().getOperador() != null)
-				noAux.setNoFilhoDireita(quebraOperacaoSimplificavel(noAux.getNoFilhoDireita()));	
+			noAux.setNoFilhoEsquerda(quebraOperacaoSimplificavel(noAux.getNoFilhoEsquerda()));
+			noAux.setNoFilhoDireita(quebraOperacaoSimplificavel(noAux.getNoFilhoDireita()));	
 			
 			return noAux;
 		}
 		return noRaiz;
 	}
-	
-	/*
-	public No quebraOperacaoSimplificavel (No noRaiz)
-	{
-		
-		if (!noRaiz.possuiFilhos())
-			return noRaiz;
-		
-		//Se a operação for de multiplicação ou divisão
-		if (noRaiz.getOperador().toString().equalsIgnoreCase("Multiplicacao") || noRaiz.getOperador().toString().equalsIgnoreCase("Divisao"))
-		{
-			//Se o filho da esquerda for zero
-			if (!noRaiz.getNoFilhoEsquerda().possuiFilhos() && !noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equalsIgnoreCase("x"))
-			{
-				if (Double.valueOf(noRaiz.getNoFilhoEsquerda().getSimboloTerminal()) == 0)
-					return new No(0);
-			}
-			
-			//Se o filho da direita for zero
-			if (!noRaiz.getNoFilhoDireita().possuiFilhos() && !noRaiz.getNoFilhoDireita().getSimboloTerminal().equalsIgnoreCase("x"))
-			{
-				if (Double.valueOf(noRaiz.getNoFilhoDireita().getSimboloTerminal()) == 0)
-					return new No(0);
-			}
-		}
-		
-		if (!noRaiz.getNoFilhoEsquerda().possuiFilhos() && !noRaiz.getNoFilhoDireita().possuiFilhos())
-		{
-			//Se as duas folhas NÃO possuirem valor x
-			if (!noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equalsIgnoreCase("x") && !noRaiz.getNoFilhoDireita().getSimboloTerminal().equalsIgnoreCase("x"))
-			{
-				try {
-					return new No(resolverOperacao(noRaiz.getNoFilhoEsquerda().getSimboloTerminal(), noRaiz.getNoFilhoDireita().getSimboloTerminal(), noRaiz.getOperador(), 0));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
-			//Se as duas folhas possuirem valor x
-			if (noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equalsIgnoreCase("x") && noRaiz.getNoFilhoDireita().getSimboloTerminal().equalsIgnoreCase("x"))
-			{
-				//subárvores (x - x) e (x / x) se tornam folhas com valor 0 e 1, respectivamente
-				if (noRaiz.getOperador().toString().equalsIgnoreCase("Subtracao"))
-					return new No(0);
-				
-				if (noRaiz.getOperador().toString().equalsIgnoreCase("Divisao"))
-					return new No(1);
-			}
-		}
-		else 
-		{
-			No noAux = noRaiz;
-			
-			if (noAux.getNoFilhoEsquerda().getOperador() != null)
-				noAux.setNoFilhoEsquerda(quebraOperacaoSimplificavel(noAux.getNoFilhoEsquerda()));
-			
-			if (noAux.getNoFilhoDireita().getOperador() != null)
-				noAux.setNoFilhoDireita(quebraOperacaoSimplificavel(noAux.getNoFilhoDireita()));	
-			
-			return noAux;
-		}
-		return noRaiz;
-	}
-	*/
 }

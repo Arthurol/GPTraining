@@ -25,7 +25,7 @@ public class No
 	
 	public No(char operador, No noEsquerda, No noDireita)
 	{
-		this.simboloTerminal = "";
+		this.simboloTerminal = null;
 		this.operador = Operacao.get(operador);
 		this.noFilhoEsquerda = noEsquerda;
 		this.noFilhoDireita = noDireita;

@@ -20,9 +20,9 @@ public class OperacaoGenetica {
 	
 	private int contadorOperacoesCrossover;
 	private int contadorNosMutacao;
-	private static double probabilidadeCrossover = 0.85;
+	private static double probabilidadeCrossover = 0.75;
 	private static double probabilidadeTorneio = 0.7;
-	private static int tamanhoTorneio = 10;
+	private static int tamanhoTorneio = 5;
 	
 	public OperacaoGenetica()
 	{
@@ -111,7 +111,7 @@ public class OperacaoGenetica {
 		//Mutação de baixo impacto
 		//mutacaoPontoAleatorioSimples(arvoreMutada.getRaiz(), pontoMutacao, random);
 		
-		arvoreMutada.simplificarArvore(arvoreMutada);
+		arvoreMutada = arvoreMutada.simplificarArvore(arvoreMutada);
 		arvoreMutada.setExpressao(arvoreMutada.stringExpressao(arvoreMutada.getRaiz()));
 		contadorNosMutacao = 0;
 		return arvoreMutada;
@@ -130,6 +130,9 @@ public class OperacaoGenetica {
 	    {	
 	    	GeradorArvoreMetodoGrow geradorArvoreGrow = new GeradorArvoreMetodoGrow();
 			ArvoreExpressao arvoreGrow = geradorArvoreGrow.gerarArvore(profundidadeArvoreOrigem, random);
+			
+			while (arvoreGrow.getRaiz() == null)
+				arvoreGrow = geradorArvoreGrow.gerarArvore(profundidadeArvoreOrigem, random);
 	    	
 			if (pontoMutacao == 0 && noRaiz.possuiFilhos())
 			{
@@ -308,7 +311,7 @@ public class OperacaoGenetica {
 						}
 					} catch (Exception e)
 					{
-						if (vencedoresTorneio.isEmpty())
+						if (!vencedoresTorneio.isEmpty())
 						{
 							System.out.println("Exceção no crossover entre as árvores:");
 							System.out.println(vencedoresTorneio.get(0).stringExpressao(vencedoresTorneio.get(0).getRaiz()) + " e " + vencedoresTorneio.get(1).stringExpressao(vencedoresTorneio.get(1).getRaiz()));
@@ -450,7 +453,7 @@ public class OperacaoGenetica {
 			
 			while(true)
 			{
-				if (sorteio < pLocal)
+				if (sorteio < pLocal || indiceVencedor == (tamanhoTorneio - 1))
 				{
 					vencedores.add(participantes.get(indiceVencedor));
 					participantes.remove(indiceVencedor);

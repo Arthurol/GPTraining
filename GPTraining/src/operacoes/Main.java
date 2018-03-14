@@ -21,8 +21,8 @@ public class Main {
 		Dataset dataset = new Dataset();
 		monta(dataset);
 		
-		int tamanhoPopulacao = 50;
-		int profundidadeLimiteArvores = 3;
+		int tamanhoPopulacao = 70;
+		int profundidadeLimiteArvores = 4;
 		Random random = new Random();
 		//random.setSeed(1234567);
 		
@@ -38,20 +38,24 @@ public class Main {
 		Populacao proximaGeracao = new Populacao();
 		proximaGeracao.setIndividuos(primeiraGeracao.getIndividuos());
 		
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 50; i++)
 		{
 			proximaGeracao.setIndividuos(operacaoGenetica.selecao(proximaGeracao, dataset, random).getIndividuos());
 			proximaGeracao.setNumeroGeracao(proximaGeracao.getNumeroGeracao() + 1);
 		}
 		
-		System.out.println("\n Árvore de melhor aptidão: " + proximaGeracao.getIndividuos().get(0).stringExpressao(proximaGeracao.getIndividuos().get(0).getRaiz()));
+		System.out.println("\n Árvore de melhor aptidão: " + proximaGeracao.getIndividuos().get(0).stringExpressao(proximaGeracao.getIndividuos().get(0).getRaiz()) + " --> " + proximaGeracao.getIndividuos().get(0).getAptidao());
 	}
 	
 	public static void monta (Dataset dataset)
 	{
 		for (int x = 1; x <= 5; x++)
 		{
-			dataset.adiciona(x, 5 * x);
+			//dataset.adiciona(x, (2 * (x * x * x)) + (4 * (x * x)) + (5 * x) - 1);
+			//dataset.adiciona(x, (x * x) + 1);
+			dataset.adiciona(x, (x * 5) + 2);
+			//dataset.adiciona(x, (x * x) - (2 * x) + 1);
+			//dataset.adiciona(x, x - 5);
 		}
 	}
 
