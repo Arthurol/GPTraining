@@ -131,7 +131,7 @@ public class OperacaoGenetica {
 	    	GeradorArvoreMetodoGrow geradorArvoreGrow = new GeradorArvoreMetodoGrow();
 			ArvoreExpressao arvoreGrow = geradorArvoreGrow.gerarArvore(profundidadeArvoreOrigem, random);
 			
-			while (arvoreGrow.getRaiz() == null)
+			while (arvoreGrow.isEmpty())
 				arvoreGrow = geradorArvoreGrow.gerarArvore(profundidadeArvoreOrigem, random);
 	    	
 			if (pontoMutacao == 0 && noRaiz.possuiFilhos())

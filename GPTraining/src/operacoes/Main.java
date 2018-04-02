@@ -19,7 +19,8 @@ public class Main {
 		GeradorPopulacaoInicial geradorPop =  new GeradorPopulacaoInicial();
 		OperacaoGenetica operacaoGenetica = new OperacaoGenetica();
 		Dataset dataset = new Dataset();
-		monta(dataset);
+		//monta(dataset);
+		montaDatasetArtigo(dataset);
 		
 		int tamanhoPopulacao = 70;
 		int profundidadeLimiteArvores = 4;
@@ -44,7 +45,9 @@ public class Main {
 			proximaGeracao.setNumeroGeracao(proximaGeracao.getNumeroGeracao() + 1);
 		}
 		
-		System.out.println("\n Árvore de melhor aptidão: " + proximaGeracao.getIndividuos().get(0).stringExpressao(proximaGeracao.getIndividuos().get(0).getRaiz()) + " --> " + proximaGeracao.getIndividuos().get(0).getAptidao());
+		System.out.println("\nÁrvore de melhor aptidão: " + proximaGeracao.getIndividuos().get(0).stringExpressao(proximaGeracao.getIndividuos().get(0).getRaiz()) 
+				+ "\nAptidão --> " + proximaGeracao.getIndividuos().get(0).getAptidao()
+				 + "\nPred(0.25) --> " + proximaGeracao.getIndividuos().get(0).getPred());
 	}
 	
 	public static void monta (Dataset dataset)
@@ -58,5 +61,34 @@ public class Main {
 			//dataset.adiciona(x, x - 5);
 		}
 	}
+	
+	/**
+	 * Dataset Abran and Robillard
+	 */
+	public static void montaDatasetArtigo (Dataset dataset)
+	{
+		dataset.adiciona(203, 418);
+		dataset.adiciona(132, 468);
+		dataset.adiciona(143, 360);
+		dataset.adiciona(204, 531);
+		dataset.adiciona(145, 471);
+		dataset.adiciona(188, 525);
+		dataset.adiciona(64, 225);
+		dataset.adiciona(114, 229);
+		dataset.adiciona(72, 143);
+		dataset.adiciona(135, 369);				
+		dataset.adiciona(143, 416);		
+		dataset.adiciona(174, 428);		
+		dataset.adiciona(103, 377);		
+		dataset.adiciona(232, 544);	
+		dataset.adiciona(31, 52);
+		dataset.adiciona(109, 400);		
+		dataset.adiciona(41, 187);		
+		dataset.adiciona(64, 198);		
+		dataset.adiciona(144, 363);
+		dataset.adiciona(79, 195);		
+		dataset.adiciona(54, 69);		
+	}
+	
 
 }

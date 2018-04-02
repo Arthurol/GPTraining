@@ -11,12 +11,14 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 {
 	private @Getter @Setter No raiz;
 	private @Getter @Setter double aptidao;
+	private @Getter @Setter double pred; 
 	private @Getter @Setter String expressao; 
 	
 	public ArvoreExpressao(No noRaiz)
 	{
 		this.raiz = new No();
 		this.aptidao = -1;
+		this.pred = 0.0;
 		
 		if (noRaiz != null)
 		{
@@ -126,6 +128,15 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 				return numeroEsquerda / numeroDireita;		
 				
 			case Exponenciacao:
+				if (numeroDireita < 0)
+				{
+					if (numeroDireita % 1 != 0) 
+						throw new Exception ("Número negativo (" + String.valueOf(numeroEsquerda) + ") elevado a double (" + String.valueOf(numeroDireita) + ")");
+					
+					double teste = Math.pow((1 / numeroEsquerda), numeroDireita * (-1));
+					return teste;
+				}
+				
 				return Math.pow(numeroEsquerda, numeroDireita);
 		}
 		
@@ -217,6 +228,14 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 			return 1;
 		
 		return (1 + getQuantidadeOperadores(noRaiz.getNoFilhoEsquerda()) + getQuantidadeOperadores(noRaiz.getNoFilhoDireita()));
+	}
+	
+	public boolean isEmpty()
+	{
+		if (this.raiz == null)
+			return true;
+		
+		return false;
 	}
 	
 	/**
@@ -357,6 +376,34 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 	{
 		if (!noRaiz.possuiFilhos())
 			return noRaiz;
+		
+		if (noRaiz.getOperador().toString().equalsIgnoreCase("Exponenciacao"))
+		{
+			if (noRaiz.noFilhoDireita.simboloTerminal != null)
+			{
+				if (noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("0") || noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("0.0"))
+					return new No(1);
+				
+				if (noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("1") || noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("1.0"))
+					return new No(noRaiz.getNoFilhoEsquerda());
+				
+			}
+			
+			//Se o filho da esquerda for zero ou 1
+			if (noRaiz.noFilhoEsquerda.simboloTerminal != null)
+			{
+				if (noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equals("0") || noRaiz.getNoFilhoEsquerda().getSimboloTerminal().equals("0.0"))
+				{
+					if (noRaiz.noFilhoDireita.simboloTerminal != null)
+					{
+						if (noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("0") || noRaiz.getNoFilhoDireita().getSimboloTerminal().equals("0.0"))
+							return new No(1);
+						else
+							return new No(0);
+					}
+				}
+			}
+		}
 		
 		//Se a operação for de multiplicação ou divisão
 		if (noRaiz.getOperador().toString().equalsIgnoreCase("Multiplicacao") || noRaiz.getOperador().toString().equalsIgnoreCase("Divisao"))
