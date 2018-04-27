@@ -130,8 +130,8 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 			case Exponenciacao:
 				if (numeroDireita < 0)
 				{
-					if (numeroDireita % 1 != 0) 
-						throw new Exception ("Número negativo (" + String.valueOf(numeroEsquerda) + ") elevado a double (" + String.valueOf(numeroDireita) + ")");
+					if ((numeroDireita % 1 != 0) && (numeroEsquerda < 0))
+						throw new Exception ("Número negativo (" + String.valueOf(numeroEsquerda) + ") elevado a double negativo (" + String.valueOf(numeroDireita) + ")");
 					
 					double teste = Math.pow((1 / numeroEsquerda), numeroDireita * (-1));
 					return teste;
@@ -499,7 +499,7 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 					return new No(resolverOperacao(noRaiz.getNoFilhoEsquerda().getSimboloTerminal(), noRaiz.getNoFilhoDireita().getSimboloTerminal(), noRaiz.getOperador(), 0));
 				} catch (Exception e) {
 					e.printStackTrace();
-					//TODO Estudar retorno null aqui
+					//return null;
 				}
 			}
 			

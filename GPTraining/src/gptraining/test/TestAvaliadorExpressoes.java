@@ -8,6 +8,8 @@ import gptraining.model.Operacao;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -179,9 +181,90 @@ public class TestAvaliadorExpressoes
 		assertEquals(0.0, calculador.calcula(arvore, ds), 0.01);
 	}
 	
-	// confirmar se o calcula da arvore esta funcionando. OK
-	
-	// TODO implementar os outros casos de teste (multiplicativo, composto, ...)
-		//mais testes para o cálculo?
+	@Test
+	public void testCalculoMmreRobillard()
+	{
+		Dataset ds = criaDatasetRobillard();
+		List<Integer> resultadosGpRobillard = new ArrayList();
+		resultadosGpRobillard.add(514);
+		resultadosGpRobillard.add(361);
+		resultadosGpRobillard.add(385);
+		resultadosGpRobillard.add(516);
+		resultadosGpRobillard.add(390);
+		resultadosGpRobillard.add(483);
+		resultadosGpRobillard.add(198);
+		resultadosGpRobillard.add(319);
+		resultadosGpRobillard.add(219);
+		resultadosGpRobillard.add(367);
+		resultadosGpRobillard.add(385);
+		resultadosGpRobillard.add(453);
+		resultadosGpRobillard.add(294);
+		resultadosGpRobillard.add(574);
+		resultadosGpRobillard.add(109);
+		resultadosGpRobillard.add(308);
+		resultadosGpRobillard.add(137);
+		resultadosGpRobillard.add(198);
+		resultadosGpRobillard.add(387);
+		resultadosGpRobillard.add(236);
+		resultadosGpRobillard.add(173);
+		
+		assertEquals(0.256, calculaMmre(resultadosGpRobillard, ds));
+																
+	}
 
+	
+	private Dataset criaDatasetRobillard()
+	{
+		Dataset dataset = new Dataset();
+		dataset.adiciona(203, 418);
+		dataset.adiciona(132, 468);
+		dataset.adiciona(143, 360);
+		dataset.adiciona(204, 531);
+		dataset.adiciona(145, 471);
+		dataset.adiciona(188, 525);
+		dataset.adiciona(64, 225);
+		dataset.adiciona(114, 229);
+		dataset.adiciona(72, 143);
+		dataset.adiciona(135, 369);				
+		dataset.adiciona(143, 416);		
+		dataset.adiciona(174, 428);		
+		dataset.adiciona(103, 377);		
+		dataset.adiciona(232, 544);	
+		dataset.adiciona(31, 52);
+		dataset.adiciona(109, 400);		
+		dataset.adiciona(41, 187);		
+		dataset.adiciona(64, 198);		
+		dataset.adiciona(144, 363);
+		dataset.adiciona(79, 195);		
+		dataset.adiciona(54, 69);	
+		
+		return dataset;
+	}
+	
+	private double calculaMmre(List<Integer> yCalculados, Dataset dataset)
+	{
+		double pred = 0.0;
+		double mmre = 0.0;
+		double somatorioMre = 0.0;
+		int tamanhoDataset = 0;
+		
+		int i = 0;
+		for (Dataset.Entrada entrada : dataset.getEntradas())
+		{
+			tamanhoDataset ++;
+			double yConhecido = entrada.getY();
+		
+			somatorioMre += Math.abs((yConhecido - yCalculados.get(i)) / yConhecido);
+			
+			if ((yCalculados.get(i) < (yConhecido * 1.25)) && (yCalculados.get(i) > (yConhecido * 0.75)))
+				pred++;
+			
+			i++;
+		}
+		
+		mmre = somatorioMre / tamanhoDataset;
+		pred = pred / tamanhoDataset;
+		return mmre;
+		
+	}
 }

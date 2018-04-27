@@ -42,7 +42,7 @@ public class CalculadorFitness
 			{
 				yCalculado = arvore.resolverExpressao(entrada.getX());
 			} catch (Exception e) {
-				return -1;
+				return 10000;
 			}
 			somatorioMre += Math.abs((yConhecido - yCalculado) / yConhecido);
 			
@@ -53,6 +53,10 @@ public class CalculadorFitness
 		mmre = somatorioMre / tamanhoDataset;
 		pred = pred / tamanhoDataset;
 		arvore.setPred(pred);
+		
+		if (Double.isNaN(mmre))
+			return 10000;
+		
 		return mmre;
 		
 	}

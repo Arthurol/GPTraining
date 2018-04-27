@@ -1,0 +1,24 @@
+Árvore-Resultado 1 - Mmre: 0.35807321667012637, Pred: 0.3958333333333333
+Árvore-Resultado 2 - Mmre: 0.3617999001857739, Pred: 0.3541666666666667
+Árvore-Resultado 3 - Mmre: 0.35187892808787424, Pred: 0.375
+Árvore-Resultado 4 - Mmre: 0.34292267522553327, Pred: 0.4583333333333333
+Árvore-Resultado 5 - Mmre: 0.37034508367667546, Pred: 0.3333333333333333
+Árvore-Resultado 6 - Mmre: 0.37492135946565047, Pred: 0.375
+Árvore-Resultado 7 - Mmre: 0.342862865571409, Pred: 0.4375
+Árvore-Resultado 8 - Mmre: 0.3505570494455046, Pred: 0.3958333333333333
+Árvore-Resultado 9 - Mmre: 0.36461577399024625, Pred: 0.375
+Árvore-Resultado 10 - Mmre: 0.3509041365483412, Pred: 0.4375
+Árvore-Resultado 11 - Mmre: 0.3706236755349981, Pred: 0.2916666666666667
+Árvore-Resultado 12 - Mmre: 0.37036014205491385, Pred: 0.3333333333333333
+Árvore-Resultado 13 - Mmre: 0.363984812292423, Pred: 0.3541666666666667
+Árvore-Resultado 14 - Mmre: 0.36009613871662444, Pred: 0.375
+Árvore-Resultado 15 - Mmre: 0.36073794905500395, Pred: 0.375
+Árvore-Resultado 16 - Mmre: 0.3571539791762919, Pred: 0.4166666666666667
+Árvore-Resultado 17 - Mmre: 0.3498877491967091, Pred: 0.4166666666666667
+Árvore-Resultado 18 - Mmre: 0.3461741634768114, Pred: 0.4791666666666667
+Árvore-Resultado 19 - Mmre: 0.3703095256773506, Pred: 0.3333333333333333
+Árvore-Resultado 20 - Mmre: 0.3704815676352941, Pred: 0.3333333333333333
+
+
+
+Média dos valores de mmre: 0.3594345345841777

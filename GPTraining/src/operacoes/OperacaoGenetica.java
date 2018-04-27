@@ -129,9 +129,10 @@ public class OperacaoGenetica {
 	    if (this.contadorNosMutacao == pontoMutacao)
 	    {	
 	    	GeradorArvoreMetodoGrow geradorArvoreGrow = new GeradorArvoreMetodoGrow();
-			ArvoreExpressao arvoreGrow = geradorArvoreGrow.gerarArvore(profundidadeArvoreOrigem, random);
+			ArvoreExpressao arvoreGrow = new ArvoreExpressao();
+			arvoreGrow = geradorArvoreGrow.gerarArvore(profundidadeArvoreOrigem, random);
 			
-			while (arvoreGrow.isEmpty())
+			while (arvoreGrow == null || arvoreGrow.isEmpty())
 				arvoreGrow = geradorArvoreGrow.gerarArvore(profundidadeArvoreOrigem, random);
 	    	
 			if (pontoMutacao == 0 && noRaiz.possuiFilhos())
@@ -236,7 +237,7 @@ public class OperacaoGenetica {
 		double tamanhoElite = (tamanhoPopulacao * 0.3);
 		for (int i = 0; i < tamanhoElite; i++)
 		{
-			System.out.println("Arvore elite " + (i+1) + ": "  + populacao.getIndividuos().get(i).stringExpressao(populacao.getIndividuos().get(i).getRaiz()) + "----------->" + populacao.getIndividuos().get(i).getAptidao());
+			//System.out.println("Arvore elite " + (i+1) + ": "  + populacao.getIndividuos().get(i).stringExpressao(populacao.getIndividuos().get(i).getRaiz()) + "----------->" + populacao.getIndividuos().get(i).getAptidao());
 			proximaGeracao.adicionaIndividuo(populacao.getIndividuos().get(i));	
 		}
 

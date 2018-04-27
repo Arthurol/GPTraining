@@ -37,18 +37,18 @@ public class GeradorPopulacaoInicial {
 			{
 				//árvore aleatória gerada
 				arvoreGrow = geradorGrow.gerarArvore(profundidadeLimite, random);
-				System.out.println("Árvore Grow " + contadorGrow + ": " + arvoreGrow.stringExpressao(arvoreGrow.getRaiz()));
+				//System.out.println("Árvore Grow " + contadorGrow + ": " + arvoreGrow.stringExpressao(arvoreGrow.getRaiz()));
 				
 				//árvore simplificada antes da verificação de validade, para eliminar casos como (x / x) e (x - x)
 				arvoreGrow = arvoreGrow.simplificarArvore(arvoreGrow);
-				System.out.println("Árvore Grow " + contadorGrow + " simplificada: " + arvoreGrow.stringExpressao(arvoreGrow.getRaiz()));
+				//System.out.println("Árvore Grow " + contadorGrow + " simplificada: " + arvoreGrow.stringExpressao(arvoreGrow.getRaiz()));
 				if (arvoreGrow.checaExistenciaDeNoX(arvoreGrow.getRaiz()) && arvoreGrow.checaValidadeArvore(arvoreGrow.getRaiz()))
 				{
-					System.out.println("\t Passou no teste!");
+					//System.out.println("\t Passou no teste!");
 					break;
 				}
-				else
-					System.out.println("\t Sem terminal x");
+				//else
+					//System.out.println("\t Sem terminal x");
 			}
 			contadorGrow++;
 			populacaoInicial.adicionaIndividuo(arvoreGrow);
@@ -61,17 +61,23 @@ public class GeradorPopulacaoInicial {
 			ArvoreExpressao arvoreFull = new ArvoreExpressao();
 			while(true)
 			{
-				arvoreFull = geradorFull.gerarArvore(profundidadeLimite, random);
-				System.out.println("Árvore Full " + contadorFull + ": " + arvoreFull.stringExpressao(arvoreFull.getRaiz()));
-				arvoreFull = arvoreFull.simplificarArvore(arvoreFull);
-				System.out.println("Árvore Full " + contadorFull + " simplificada: " + arvoreFull.stringExpressao(arvoreFull.getRaiz()));
-				if (arvoreFull.checaExistenciaDeNoX(arvoreFull.getRaiz()) && arvoreFull.checaValidadeArvore(arvoreFull.getRaiz()) )
+				try
 				{
-					System.out.println("\t Passou no teste!");
-					break;
-				}
-				else
-					System.out.println("\t Sem terminal x");
+					arvoreFull = geradorFull.gerarArvore(profundidadeLimite, random);
+					//System.out.println("Árvore Full " + contadorFull + ": " + arvoreFull.stringExpressao(arvoreFull.getRaiz()));
+					arvoreFull = arvoreFull.simplificarArvore(arvoreFull);
+					//System.out.println("Árvore Full " + contadorFull + " simplificada: " + arvoreFull.stringExpressao(arvoreFull.getRaiz()));
+					if (arvoreFull.checaExistenciaDeNoX(arvoreFull.getRaiz()) && arvoreFull.checaValidadeArvore(arvoreFull.getRaiz()) )
+					{
+						//System.out.println("\t Passou no teste!");
+						break;
+					}
+					//else
+						//System.out.println("\t Sem terminal x");
+				} catch (Exception e)
+				{
+					
+				}	
 			}
 			contadorFull++;
 			populacaoInicial.adicionaIndividuo(arvoreFull);

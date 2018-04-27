@@ -18,6 +18,9 @@ public class GeradorArvoreMetodoGrow implements IGeradorArvore
 			No raiz = new No();			
 			raiz = geraArvoreMetodoGrow(profundidadeLimite, random);
 			
+			if (raiz == null)
+				return gerarArvore(profundidadeLimite, random);
+			
 			ArvoreExpressao arvore = new ArvoreExpressao(raiz);
 			return arvore;
 		}
