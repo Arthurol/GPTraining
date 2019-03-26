@@ -96,6 +96,9 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 				return resolverOperacao(String.valueOf(resolverExpressao(filhoEsquerda, valorX)), String.valueOf(resolverExpressao(filhoDireita, valorX)), operador, valorX);
 			}
 		}
+		if (raizSubArvore.simboloTerminal != null && raizSubArvore.simboloTerminal.equals("x"))
+			return valorX;
+		
 		throw new Exception("método resolverExpressão sendo chamado de um nó folha.");
 	}
 	

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Classe que representa um dataset para o problema de geração de expressões
@@ -13,6 +15,7 @@ import lombok.Data;
 public class Dataset
 {
 	private List<Entrada> entradas;
+	private @Getter @Setter String nome;
 
 	/**
 	 * Classe que representa uma entrada do dataset

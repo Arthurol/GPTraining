@@ -41,7 +41,9 @@ public class CalculadorFitness
 			try 
 			{
 				yCalculado = arvore.resolverExpressao(entrada.getX());
+				
 			} catch (Exception e) {
+				e.printStackTrace();
 				return 10000;
 			}
 			somatorioMre += Math.abs((yConhecido - yCalculado) / yConhecido);

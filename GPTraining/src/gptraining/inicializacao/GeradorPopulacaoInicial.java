@@ -14,7 +14,7 @@ public class GeradorPopulacaoInicial {
 	 */
 	public Populacao inicializacaoRampedHalfAndHalf(int tamanhoPopulacao, int profundidadeLimite, Random random)
 	{
-		Populacao populacaoInicial =  new Populacao(tamanhoPopulacao);
+		Populacao populacaoInicial = new Populacao(tamanhoPopulacao);
 		GeradorArvoreMetodoGrow geradorGrow = new GeradorArvoreMetodoGrow();
 		GeradorArvoreMetodoFull geradorFull= new GeradorArvoreMetodoFull();
 

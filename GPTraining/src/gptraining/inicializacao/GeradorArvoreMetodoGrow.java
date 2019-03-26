@@ -6,7 +6,8 @@ import gptraining.model.No;
 import java.util.Random;
 
 /**
- * Geração de uma árvore aleatória através do método Grow. Neste, as folhas não precisam estar na profundidade máxima. A profundidade de cada folha é decidida com sorteios aleatórios. 
+ * Geração de uma árvore aleatória através do método Grow. Neste, as folhas não precisam estar na 
+ * profundidade máxima. A profundidade de cada folha é decidida com sorteios aleatórios. 
  */
 public class GeradorArvoreMetodoGrow implements IGeradorArvore 
 {
@@ -29,6 +30,8 @@ public class GeradorArvoreMetodoGrow implements IGeradorArvore
 	
 	private No geraArvoreMetodoGrow(int profundidadeLimite, Random random)
 	{
+		//Caso o parâmetro profundidadeLimite passado seja igual a zero, 
+		//a árvore retornada terá altura zero, ou seja, uma árvore com apenas um nó terminal
 		if (profundidadeLimite == 0)
 		{
 			No folha = new No();
@@ -36,6 +39,7 @@ public class GeradorArvoreMetodoGrow implements IGeradorArvore
 			return folha;
 		}
 		
+		//Caso seja maior que zero, o nó raiz necessariamente será um operador
 		No raizSubArvore = new No();
 		raizSubArvore.preenchimentoAleatorioOperador(random);
 
