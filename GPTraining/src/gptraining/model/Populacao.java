@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class Populacao 
 {
-	public @Getter @Setter List<ArvoreExpressao> individuos;
-	public @Getter @Setter int  numeroGeracao;
+	public List<ArvoreExpressao> individuos;
+	public int  numeroGeracao;
 	
 	public Populacao()
 	{
@@ -29,6 +26,22 @@ public class Populacao
 		individuos = listaIndividuos;
 	}
 	
+	public List<ArvoreExpressao> getIndividuos() {
+		return individuos;
+	}
+
+	public void setIndividuos(List<ArvoreExpressao> individuos) {
+		this.individuos = individuos;
+	}
+
+	public int getNumeroGeracao() {
+		return numeroGeracao;
+	}
+
+	public void setNumeroGeracao(int numeroGeracao) {
+		this.numeroGeracao = numeroGeracao;
+	}
+	
 	public void adicionaIndividuo(ArvoreExpressao arvore)
 	{
 		individuos.add(arvore);
@@ -37,5 +50,4 @@ public class Populacao
 	public void embaralhaPopulacao() {
 		Collections.shuffle(individuos);
 	}
-	
 }

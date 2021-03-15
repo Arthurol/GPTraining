@@ -1,7 +1,4 @@
 package gptraining.model;
-
-import lombok.Getter;
-import lombok.Setter;
 import operacoes.Comparable;
 
 /**
@@ -9,10 +6,10 @@ import operacoes.Comparable;
  */
 public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 {
-	private @Getter @Setter No raiz;
-	private @Getter @Setter double aptidao;
-	private @Getter @Setter double pred; 
-	private @Getter @Setter String expressao; 
+	private No raiz;
+	private double aptidao;
+	private double pred; 
+	private String expressao; 
 	
 	public ArvoreExpressao(No noRaiz)
 	{
@@ -40,19 +37,25 @@ public class ArvoreExpressao implements Comparable<ArvoreExpressao>
 		this.expressao = "";
 	}
 	
-	/*public ArvoreExpressao(ArvoreExpressao arvore)
-	{
-		No noRaiz = arvore.getRaiz();
-		
-		this.raiz = new No();	
-		this.raiz.noFilhoDireita = (noRaiz.noFilhoDireita) == null ? null : noRaiz.getNoFilhoDireita();
-		this.raiz.noFilhoEsquerda = (noRaiz.noFilhoEsquerda) == null ? null : noRaiz.getNoFilhoEsquerda();
-		this.raiz.operador = (noRaiz.operador == null) ? null : noRaiz.getOperador();
-		this.raiz.simboloTerminal = (noRaiz.simboloTerminal == null) ? null : noRaiz.getSimboloTerminal();
+	public String getExpressao() {
+		return expressao;
+	}
+
+	public void setExpressao(String expressao) {
+		this.expressao = expressao;
+	}
 	
-		this.aptidao = arvore.getAptidao();
-		this.expressao = stringExpressao(arvore.getRaiz());
-	}*/
+	public double getPred() {
+		return pred;
+	}
+
+	public void setPred(double pred) {
+		this.pred = pred;
+	}
+
+	public double getAptidao() {
+		return aptidao;
+	}
 	
 	/**
 	 * Recursivamente resolve as operações matemáticas da árvore, representada pelo nó raiz, retornando um resultado double convertido em String. 

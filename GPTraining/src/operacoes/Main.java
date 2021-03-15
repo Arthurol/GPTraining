@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -21,8 +23,9 @@ public class Main {
 	public static void main(String[] args)
 	{
 		//execucaoTradicional();
-		execucaoMediaMmre();
-			
+		//execucaoMediaMmre();
+		execucaoGeracaoDadosMmre();
+
 	}
 	
 	/**
@@ -112,6 +115,96 @@ public class Main {
 				E.printStackTrace();
 			}
 		}
+	}
+	
+	private static void execucaoGeracaoDadosMmre() 
+	{
+		GeradorPopulacaoInicial geradorPop =  new GeradorPopulacaoInicial();
+		OperacaoGenetica operacaoGenetica = new OperacaoGenetica();
+		int numeroResultados = 30;
+		Random random;
+		int tamanhoPopulacao = 70;
+		int profundidadeLimiteArvores = 4;
+		
+		// melhor expressão de cada geração gerada para o dataset escolhido será escrita no csv
+		int dataset_print_equacoes = 1;
+				
+		double mmre;
+		
+		PrintWriter writerMmre = null;
+		PrintWriter writerEquacoes = null;
+		PrintWriter writerTempoExecucao = null;
+		
+		try {
+			writerMmre = new PrintWriter("trinta_mmre_datasets.csv");
+			writerMmre.println("dataset;mmre");
+			writerMmre.close();
+			
+			writerEquacoes = new PrintWriter("equacoes_mmre.csv");
+			writerEquacoes.println("dataset;expressao;mmre");
+			writerEquacoes.close();
+			
+			writerTempoExecucao = new PrintWriter("tempo_execucao.csv");
+			writerTempoExecucao.println("dataset;num_execucao;tempo(ms)");
+			writerTempoExecucao.close();
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		ArrayList<String> listaResultados = new ArrayList<String>();
+		
+		//i representa a numeração dos datasets, de 1 a 12.
+		for (int i = 1; i < 13; i++)
+		{
+			Dataset dataset = new Dataset();
+			montaDatasetArtigo(i, dataset);
+			
+			try 
+			{	
+				for (int j = 1; j <= numeroResultados; j++)
+				{
+					long inicio = System.nanoTime();
+					random = new Random();
+					Populacao primeiraGeracao = geradorPop.inicializacaoRampedHalfAndHalf(tamanhoPopulacao, profundidadeLimiteArvores, random);
+					Populacao proximaGeracao = new Populacao();
+					proximaGeracao.setIndividuos(primeiraGeracao.getIndividuos());
+					
+					for (int k = 0; k < 50; k++)
+					{
+						proximaGeracao.setIndividuos(operacaoGenetica.selecao(proximaGeracao, dataset, random).getIndividuos());
+						proximaGeracao.setNumeroGeracao(proximaGeracao.getNumeroGeracao() + 1);
+					}
+					
+					long fim = System.nanoTime();
+					long duracao = (fim - inicio);
+					String menorMmre = String.valueOf(proximaGeracao.getIndividuos().get(0).getAptidao());
+					
+					writerMmre = new PrintWriter(new BufferedWriter(new FileWriter("trinta_mmre_datasets.csv", true)));
+					writerMmre.println(i + ";" + menorMmre);
+					writerMmre.flush();
+					writerMmre.close();
+					
+					listaResultados.add(menorMmre);
+					
+					String expressao = proximaGeracao.getIndividuos().get(0).stringExpressao(proximaGeracao.getIndividuos().get(0).getRaiz());
+					
+					writerEquacoes = new PrintWriter(new BufferedWriter(new FileWriter("equacoes_mmre.csv", true)));
+					writerEquacoes.println(i + ";" + "'" + expressao + "'" + ";" + proximaGeracao.getIndividuos().get(0).getAptidao());
+					writerEquacoes.flush();
+					writerEquacoes.close();
+					
+					writerTempoExecucao = new PrintWriter(new BufferedWriter(new FileWriter("tempo_execucao.csv", true)));
+					writerTempoExecucao.println(i + ";" + j + ";" + duracao/1000000);
+					writerTempoExecucao.flush();
+					writerTempoExecucao.close();
+				}
+			}
+			catch (Exception E)
+			{
+				E.printStackTrace();
+			}
+		}	
 	}
 	
 	private static void montaDatasetArtigo(int numeroDataset, Dataset dataset)

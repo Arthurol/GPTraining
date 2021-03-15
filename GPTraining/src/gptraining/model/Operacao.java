@@ -12,15 +12,31 @@ public enum Operacao
 	Subtracao(2, '-'),
 	Divisao(3, '/'),
 	Exponenciacao(4, '^');
-	
-	public @Getter int codigo;
-	public @Getter char operador;
+
+	public int codigo;
+	public char operador;
 	
 	private Operacao(int codigo, char operador)
     {
         this.codigo = codigo;
         this.operador = operador;
     }
+	
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
+
+	public char getOperador() {
+		return operador;
+	}
+
+	public void setOperador(char operador) {
+		this.operador = operador;
+	}
 	
 	public static Operacao get(int codigo)
 	{

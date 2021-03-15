@@ -2,18 +2,15 @@ package gptraining.model;
 
 import java.util.Random;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Estrutura das árvores sintáticas, que contém um terminal ou uma operação.
  */
 public class No 
 {
-	public @Getter @Setter String simboloTerminal;
-	public @Setter Operacao operador;
-	public @Getter @Setter No noFilhoEsquerda;
-	public @Getter @Setter No noFilhoDireita;
+	public String simboloTerminal;
+	public Operacao operador;
+	public No noFilhoEsquerda;
+	public No noFilhoDireita;
 	
 	public No()
 	{
@@ -58,6 +55,10 @@ public class No
 	public Operacao getOperador()
 	{
 		return operador;
+	}
+	
+	public void setOperador(Operacao operador) {
+		this.operador = operador;
 	}
 	
 	public boolean possuiFilhos()
@@ -117,8 +118,11 @@ public class No
 	}
 
 	public String getSimboloTerminal() {
-		
 		return simboloTerminal;
+	}
+
+	public void setSimboloTerminal(String simboloTerminal) {
+		this.simboloTerminal = simboloTerminal;
 	}
 
 	public void setNoFilhoEsquerda(No noFilhoEsquerda) {

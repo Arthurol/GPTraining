@@ -3,10 +3,6 @@ package gptraining.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Classe que representa um dataset para o problema de geração de expressões
  * 
@@ -15,15 +11,28 @@ import lombok.Setter;
 public class Dataset
 {
 	private List<Entrada> entradas;
-	private @Getter @Setter String nome;
+	private String nome;
 
 	/**
 	 * Classe que representa uma entrada do dataset
 	 */
-	public @Data class Entrada
+	public class Entrada
 	{
 		private double x;
 		private double y;
+		
+		public double getX() {
+			return x;
+		}
+		public void setX(double x) {
+			this.x = x;
+		}
+		public double getY() {
+			return y;
+		}
+		public void setY(double y) {
+			this.y = y;
+		}
 	}
 	
 	/**
@@ -32,6 +41,18 @@ public class Dataset
 	public Dataset()
 	{
 		this.entradas = new ArrayList<Entrada>();
+	}
+	
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public void setEntradas(List<Entrada> entradas) {
+		this.entradas = entradas;
 	}
 	
 	/**
